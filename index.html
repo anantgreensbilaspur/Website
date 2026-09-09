@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#16352b">
+  <title>Anant Greens | Plotted Township, Bilaspur</title>
+  <link rel="preload" as="image" href="assets/optimized/01.webp">
+  <link rel="preload" as="image" href="assets/brand/anant-greens-logo-transparent.png">
+  <style>
+    :root {
+      --forest: #16352b;
+      --forest-dark: #0c2019;
+      --sage: #a8ba8b;
+      --ivory: #f5f1e8;
+      --white: #fff;
+      --ink: #1d211e;
+      --muted: #6b716c;
+      --line: #d4d1c7;
+      --accent: #c45c45;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--ivory);
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+
+    img { display: block; width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+
+    .container {
+      width: min(1320px, calc(100% - 56px));
+      margin: 0 auto;
+    }
+
+    .header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 50;
+      color: white;
+      border-bottom: 1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(168,186,139,.18), transparent 34%),
+        radial-gradient(circle at 76% 18%, rgba(196,92,69,.13), transparent 30%),
+        linear-gradient(115deg, rgba(12,32,25,.96), rgba(20,78,58,.94) 46%, rgba(12,32,25,.98)),
+        var(--forest);
+      box-shadow: 0 18px 46px rgba(7,22,16,.16);
+      transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease;
+      isolation: isolate;
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: .22;
+      background:
+        repeating-linear-gradient(128deg, transparent 0 15px, rgba(255,255,255,.05) 16px, transparent 18px),
+        radial-gradient(ellipse at 12% 130%, rgba(255,255,255,.16), transparent 45%);
+      pointer-events: none;
+    }
+
+    .header.scrolled,
+    .header.open {
+      color: white;
+      border-color: rgba(255,255,255,.18);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 16px 50px rgba(7,22,16,.26);
+    }
+
+    .nav {
+      min-height: 78px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 34px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 0;
+    }
+
+    .logo-image {
+      width: clamp(200px, 20vw, 270px);
+      height: auto;
+      display: block;
+    }
+
+    .logo-text-fallback {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .logo-symbol {
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .85rem;
+    }
+
+    .logo strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .logo small {
+      display: block;
+      margin-top: 5px;
+      opacity: .62;
+      font-size: .58rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 6px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(7,28,21,.24);
+    }
+
+    .nav-links a {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      font-size: .72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: rgba(255,255,255,.78);
+      transition: color .2s ease, background .2s ease;
+    }
+
+    .nav-links a:hover {
+      color: white;
+      background: rgba(255,255,255,.1);
+    }
+
+    .nav-cta,
+    .btn {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      border: 1px solid transparent;
+      background: var(--forest);
+      color: white;
+      font-size: .74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease, border-color .2s ease;
+    }
+
+    .nav-cta {
+      color: var(--forest-dark);
+      background: var(--sage);
+      box-shadow: 0 12px 26px rgba(0,0,0,.16);
+    }
+
+    .header.scrolled .nav-cta,
+    .header.open .nav-cta { color: var(--forest-dark); background: var(--sage); }
+    .btn:hover, .nav-cta:hover { background: var(--accent); color: white; }
+    .btn.light { color: var(--forest); background: var(--ivory); }
+    .btn.light:hover { background: white; }
+    .btn.outline { color: var(--forest); background: transparent; border-color: var(--forest); }
+    .btn.outline:hover { color: white; background: var(--forest); }
+
+    .menu {
+      display: none;
+      min-width: 46px;
+      min-height: 46px;
+      border: 1px solid rgba(255,255,255,.28);
+      background: rgba(255,255,255,.08);
+      color: white;
+      cursor: pointer;
+      font-size: .68rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .hero {
+      min-height: 100svh;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      isolation: isolate;
+      color: white;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: url("assets/optimized/01.webp") center / cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg, rgba(5,17,12,.12), rgba(5,17,12,.15) 45%, rgba(5,17,12,.9)),
+        linear-gradient(90deg, rgba(5,17,12,.42), transparent 55%);
+    }
+
+    .hero-inner {
+      width: 100%;
+      padding: 150px 0 44px;
+    }
+
+    .hero-kicker {
+      margin: 0 0 20px;
+      font-size: .7rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 1100px;
+      font-size: clamp(5rem, 13vw, 12rem);
+      line-height: .8;
+    }
+
+    h1 em {
+      color: var(--sage);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .hero-lower {
+      display: grid;
+      grid-template-columns: minmax(0, 680px) 1fr;
+      gap: 60px;
+      align-items: end;
+      margin-top: 34px;
+    }
+
+    .hero-copy {
+      margin: 0;
+      color: rgba(255,255,255,.75);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+    .hero-facts {
+      border-bottom: 1px solid var(--line);
+      background: white;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .fact {
+      min-height: 156px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 26px;
+      border-left: 1px solid var(--line);
+    }
+
+    .fact:last-child { border-right: 1px solid var(--line); }
+    .fact span { color: var(--muted); font-size: .66rem; font-weight: 900; text-transform: uppercase; letter-spacing: .1em; }
+    .fact strong { color: var(--forest); font-family: Georgia, "Times New Roman", serif; font-size: clamp(2rem, 3.5vw, 3.7rem); font-weight: 400; line-height: .9; }
+    .fact small { color: var(--muted); font-size: .7rem; line-height: 1.35; }
+
+    .section { padding: 120px 0; }
+    .section.white { background: white; }
+    .section.forest { color: white; background: var(--forest); }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--accent);
+      font-size: .68rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+
+    .forest .eyebrow { color: var(--sage); }
+
+    .display {
+      max-width: 970px;
+      font-size: clamp(3rem, 6.5vw, 7.2rem);
+      line-height: .94;
+    }
+
+    .intro {
+      max-width: 720px;
+      margin: 26px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .forest .intro { color: rgba(255,255,255,.64); }
+
+    .vision {
+      display: grid;
+      grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+      gap: 80px;
+      align-items: center;
+    }
+
+    .vision-copy { padding-block: 40px; }
+
+    .vision-points {
+      margin-top: 44px;
+      border-top: 1px solid var(--line);
+    }
+
+    .vision-point {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 18px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .vision-point b { color: var(--accent); }
+    .vision-point strong { display: block; margin-bottom: 5px; }
+    .vision-point p { margin: 0; color: var(--muted); line-height: 1.55; font-size: .88rem; }
+
+    .vision-media {
+      position: relative;
+      min-height: 760px;
+    }
+
+    .vision-main {
+      width: calc(100% - 105px);
+      height: 690px;
+      margin-left: auto;
+      object-fit: cover;
+    }
+
+    .vision-detail {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 265px;
+      height: 350px;
+      object-fit: cover;
+      border: 14px solid var(--ivory);
+    }
+
+    .vision-caption {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      max-width: 220px;
+      padding: 15px 0;
+      border-top: 1px solid var(--forest);
+      color: var(--muted);
+      font-size: .74rem;
+      line-height: 1.55;
+    }
+
+    .experience-heading {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 60px;
+      align-items: end;
+      margin-bottom: 54px;
+    }
+
+    .experience-heading .intro { margin: 0; }
+
+    .experiences {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .experience {
+      position: relative;
+      min-height: 620px;
+      overflow: hidden;
+      background: var(--forest-dark);
+    }
+
+    .experience:nth-child(2) { margin-top: 70px; }
+
+    .experience img {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .45s ease;
+    }
+
+    .experience:hover img { transform: scale(1.025); }
+
+    .experience::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(6,20,14,.92), transparent 64%);
+    }
+
+    .experience-copy {
+      position: absolute;
+      z-index: 1;
+      inset: auto 0 0;
+      padding: 30px;
+    }
+
+    .experience small { color: var(--sage); font-size: .64rem; font-weight: 900; text-transform: uppercase; letter-spacing: .12em; }
+    .experience h3 { margin-top: 10px; font-size: 2.3rem; }
+    .experience p { margin: 12px 0 0; color: rgba(255,255,255,.66); line-height: 1.55; font-size: .88rem; }
+
+    .panorama {
+      position: relative;
+      min-height: 80svh;
+      display: flex;
+      align-items: flex-end;
+      color: white;
+      background: url("assets/optimized/10.webp") center / cover no-repeat;
+    }
+
+    .panorama::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(7,22,16,.85), transparent 58%);
+    }
+
+    .panorama-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      padding: 70px 0;
+    }
+
+    .panorama-copy h2 { font-size: clamp(3rem, 6vw, 6.8rem); line-height: .92; }
+    .panorama-copy p { max-width: 570px; color: rgba(255,255,255,.7); line-height: 1.7; }
+
+    .gallery-intro {
+      display: flex;
+      justify-content: space-between;
+      gap: 60px;
+      align-items: end;
+      margin-bottom: 42px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+    }
+
+    .gallery-column { display: grid; gap: 18px; }
+    .gallery-shot { margin: 0; overflow: hidden; background: #ddd; }
+    .gallery-shot.tall { height: 720px; }
+    .gallery-shot.medium { height: 450px; }
+    .gallery-shot.short { height: 330px; }
+    .gallery-shot img { height: 100%; object-fit: cover; transition: transform .4s ease; }
+    .gallery-shot:hover img { transform: scale(1.02); }
+    .gallery-shot figcaption { padding: 12px 0 0; color: var(--muted); font-size: .68rem; font-weight: 800; text-transform: uppercase; }
+
+    .maps-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
+      gap: 60px;
+      align-items: end;
+      margin-bottom: 42px;
+    }
+
+    .map-shell { border: 1px solid rgba(255,255,255,.24); }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,.24);
+    }
+
+    .tab {
+      flex: 1;
+      min-height: 56px;
+      border: 0;
+      color: rgba(255,255,255,.58);
+      background: transparent;
+      font-size: .74rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .tab[aria-selected="true"] { color: var(--forest); background: var(--sage); }
+    .map-panel { display: none; padding: 14px; }
+    .map-panel.active { display: block; }
+    .map-frame { height: 660px; background: #dfe3db; }
+    .map-frame iframe { width: 100%; height: 100%; border: 0; }
+
+    .location {
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      min-height: 620px;
+    }
+
+    .location-copy { padding: clamp(28px, 5vw, 64px); background: var(--ivory); color: var(--ink); }
+    .location-copy h3 { font-size: clamp(2.8rem, 5vw, 5.5rem); line-height: .95; }
+    .location-copy > p { color: var(--muted); line-height: 1.7; }
+    .location img { height: 100%; min-height: 620px; object-fit: cover; }
+
+    .landmarks { margin: 28px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .landmarks li { display: flex; justify-content: space-between; gap: 15px; padding: 13px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+    .landmarks strong { color: var(--ink); }
+
+    .approval-head {
+      display: grid;
+      grid-template-columns: 1fr 390px;
+      gap: 70px;
+      align-items: end;
+      margin-bottom: 45px;
+    }
+
+    .rera {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--accent);
+      background: white;
+    }
+
+    .rera small { color: var(--accent); font-weight: 900; text-transform: uppercase; }
+    .rera strong { display: block; margin-top: 10px; overflow-wrap: anywhere; color: var(--forest); font-family: Georgia, "Times New Roman", serif; font-size: 2rem; font-weight: 400; }
+    .rera p { color: var(--muted); font-size: .82rem; line-height: 1.55; }
+
+    .approval-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .approval-column + .approval-column { border-left: 1px solid var(--line); }
+    .approval-title { padding: 17px 20px; border-bottom: 1px solid var(--line); color: var(--forest); background: #e8ece3; font-size: .72rem; font-weight: 900; text-transform: uppercase; }
+    .document { display: grid; grid-template-columns: 1fr auto; gap: 15px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+    .document:last-child { border-bottom: 0; }
+    .document strong { display: block; font-size: .9rem; }
+    .document p { margin: 5px 0 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
+    .status { align-self: start; padding: 5px 8px; border: 1px solid var(--line); color: var(--muted); font-size: .6rem; font-weight: 900; text-transform: uppercase; white-space: nowrap; }
+    .status.stated { color: var(--forest); background: var(--sage); border-color: var(--sage); }
+
+    .checks { margin: 0; padding: 0; list-style: none; counter-reset: check; }
+    .checks li { position: relative; padding: 17px 20px 17px 57px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .82rem; line-height: 1.5; counter-increment: check; }
+    .checks li::before { content: counter(check); position: absolute; top: 16px; left: 20px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; color: white; background: var(--forest); font-size: .65rem; font-weight: 900; }
+
+    .official { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .official a { min-height: 42px; display: inline-flex; align-items: center; padding: 0 14px; border: 1px solid var(--forest); color: var(--forest); font-size: .7rem; font-weight: 900; text-transform: uppercase; }
+    .disclaimer { margin-top: 22px; padding: 17px; border-left: 4px solid var(--accent); color: var(--muted); background: #ece9df; font-size: .78rem; line-height: 1.6; }
+
+    .contact {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      min-height: 720px;
+    }
+
+    .contact-media {
+      position: relative;
+      background: url("assets/optimized/05.webp") center / cover no-repeat;
+    }
+
+    .contact-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(5,20,14,.82), transparent 65%); }
+    .contact-media-copy { position: absolute; z-index: 1; inset: auto 44px 44px; color: white; }
+    .contact-media-copy h2 { font-size: clamp(3rem, 5vw, 5.7rem); line-height: .92; }
+    .contact-media-copy p { max-width: 500px; color: rgba(255,255,255,.68); line-height: 1.6; }
+
+    .contact-panel { padding: clamp(30px, 5vw, 70px); background: white; }
+    .details { margin: 30px 0; border-top: 1px solid var(--line); }
+    .detail { padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .detail small { display: block; color: var(--accent); font-weight: 900; text-transform: uppercase; }
+    .detail strong { display: block; margin-top: 5px; line-height: 1.45; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    label { display: grid; gap: 7px; color: var(--muted); font-size: .65rem; font-weight: 900; text-transform: uppercase; }
+    input, textarea { width: 100%; min-height: 49px; padding: 12px; border: 1px solid var(--line); border-radius: 0; background: #faf9f5; color: var(--ink); outline: none; }
+    input:focus, textarea:focus { border-color: var(--forest); }
+    textarea { min-height: 125px; resize: vertical; }
+    .full { grid-column: 1 / -1; }
+    .form-message { display: none; margin-bottom: 13px; padding: 11px; color: var(--forest); background: #e6ecd9; font-weight: 700; }
+    .form-message.show { display: block; }
+    .form-note { color: var(--muted); font-size: .72rem; line-height: 1.5; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+
+    footer {
+      position: relative;
+      padding: 38px 0 34px;
+      color: rgba(255,255,255,.68);
+      background:
+        radial-gradient(circle at 16% 8%, rgba(168,186,139,.18), transparent 33%),
+        radial-gradient(circle at 82% 42%, rgba(196,92,69,.12), transparent 28%),
+        linear-gradient(115deg, rgba(12,32,25,.98), rgba(20,78,58,.94) 48%, rgba(12,32,25,1)),
+        var(--forest);
+      border-top: 1px solid rgba(255,255,255,.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      font-size: .75rem;
+      isolation: isolate;
+    }
+
+    footer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: .22;
+      background:
+        repeating-linear-gradient(128deg, transparent 0 15px, rgba(255,255,255,.05) 16px, transparent 18px),
+        radial-gradient(ellipse at 14% 125%, rgba(255,255,255,.16), transparent 45%);
+      pointer-events: none;
+    }
+    .footer-row { display: flex; justify-content: space-between; gap: 30px; align-items: center; }
+    .footer-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .footer-logo {
+      width: min(250px, 70vw);
+      height: auto;
+      display: block;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 6px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(7,28,21,.24);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .footer-links a {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      color: rgba(255,255,255,.78);
+      transition: color .2s ease, background .2s ease;
+    }
+    .footer-links a:hover {
+      color: white;
+      background: rgba(255,255,255,.1);
+    }
+    .footer-legal { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.16); line-height: 1.55; }
+    .footer-legal a { color: var(--sage); }
+
+    @media (max-width: 1020px) {
+      .nav { grid-template-columns: auto auto; }
+      .nav-links, .nav-cta { display: none; }
+      .menu { display: inline-grid; place-items: center; justify-self: end; }
+      .header.open .nav-links { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, 1fr); padding: 10px 0 20px; }
+      .vision, .experience-heading, .maps-head, .approval-head, .location, .contact { grid-template-columns: 1fr; }
+      .vision-main { width: calc(100% - 80px); }
+      .experiences { grid-template-columns: 1fr 1fr; }
+      .experience:nth-child(2) { margin-top: 0; }
+      .experience:last-child { grid-column: 1 / -1; min-height: 500px; }
+      .approval-grid { grid-template-columns: 1fr; }
+      .approval-column + .approval-column { border-left: 0; border-top: 1px solid var(--line); }
+      .contact-media { min-height: 620px; }
+    }
+
+    @media (max-width: 680px) {
+      .container { width: min(100% - 24px, 1320px); }
+      .logo-image { width: 186px; }
+      .logo small { display: none; }
+      .hero-inner { padding-top: 128px; }
+      h1 { font-size: clamp(4rem, 22vw, 6.5rem); }
+      .hero-lower { grid-template-columns: 1fr; gap: 24px; }
+      .hero-actions { justify-content: flex-start; flex-direction: column; }
+      .hero-actions .btn, .actions .btn { width: 100%; }
+      .facts { grid-template-columns: 1fr 1fr; }
+      .fact { min-height: 135px; }
+      .section { padding: 78px 0; }
+      .vision { gap: 40px; }
+      .vision-media { min-height: 520px; }
+      .vision-main { width: 100%; height: 480px; }
+      .vision-detail { width: 180px; height: 230px; border-width: 8px; }
+      .vision-caption { display: none; }
+      .experiences { grid-template-columns: 1fr; }
+      .experience, .experience:last-child { min-height: 500px; grid-column: auto; }
+      .panorama { min-height: 680px; }
+      .gallery-intro, .footer-row { align-items: stretch; flex-direction: column; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-shot.tall, .gallery-shot.medium, .gallery-shot.short { height: 430px; }
+      .map-frame { height: 560px; }
+      .document { grid-template-columns: 1fr; }
+      .status { width: fit-content; }
+      .official { flex-direction: column; }
+      .official a { justify-content: center; }
+      .contact-media { min-height: 560px; }
+      .contact-media-copy { inset: auto 22px 28px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header" id="header">
+    <div class="container nav">
+      <a class="logo" href="#top">
+        <img class="logo-image" src="assets/brand/anant-greens-logo-transparent.png" alt="Anant Greens">
+        <span class="logo-text-fallback">Anant Greens · Breathe Life, Beautifully</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#vision">Vision</a>
+        <a href="#experience">Experience</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#maps">Maps</a>
+        <a href="#approvals">Approvals</a>
+      </nav>
+      <a class="nav-cta" href="#contact">Book a visit</a>
+      <button class="menu" id="menu" type="button" aria-label="Toggle navigation">Menu</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="container">
+          <p class="hero-kicker">Shri Anant Creation presents · Sarkanda, Bilaspur</p>
+          <h1>Anant <em>Greens</em></h1>
+          <div class="hero-lower">
+            <p class="hero-copy">A plotted township conceived around landscape, recreation and secure multi-generational living in Ashok Nagar, beside Patrakar Colony.</p>
+            <div class="hero-actions">
+              <a class="btn light" href="#maps">Explore layout</a>
+              <a class="btn" href="#contact">Schedule visit</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero-facts" aria-label="Project summary">
+      <div class="container facts">
+        <div class="fact"><span>Township</span><strong>6 Acres</strong><small>Area stated in project brochure</small></div>
+        <div class="fact"><span>Road edge</span><strong>100'</strong><small>Second Gaurav Path frontage stated in brochure</small></div>
+        <div class="fact"><span>Living idea</span><strong>3 Gen</strong><small>Planned for multiple life stages</small></div>
+        <div class="fact"><span>CG-RERA</span><strong>Registered</strong><small>PCGRERA270326002073</small></div>
+      </div>
+    </section>
+
+    <section class="section" id="vision">
+      <div class="container vision">
+        <div class="vision-copy">
+          <p class="eyebrow">The vision</p>
+          <h2 class="display">A home begins with the land around it.</h2>
+          <p class="intro">Anant Greens is presented as a landscape-led plotted community where arrival, streets, recreation and open space are considered as carefully as the homes they will serve.</p>
+          <div class="vision-points">
+            <div class="vision-point"><b>01</b><div><strong>Plotted ownership</strong><p>Plot and custom bungalow possibilities inside a planned residential setting.</p></div></div>
+            <div class="vision-point"><b>02</b><div><strong>Urban connection</strong><p>Located in Sarkanda with access to education, healthcare and institutional destinations.</p></div></div>
+            <div class="vision-point"><b>03</b><div><strong>Landscape as infrastructure</strong><p>Planted avenues, courts, walking areas and recreation shape the community experience.</p></div></div>
+          </div>
+        </div>
+        <div class="vision-media">
+          <img class="vision-main" src="assets/optimized/06.webp" alt="Anant Greens clubhouse and landscape" loading="lazy" decoding="async">
+          <img class="vision-detail" src="assets/optimized/08.webp" alt="Anant Greens landscaped court" loading="lazy" decoding="async">
+          <p class="vision-caption">Project visuals supplied by the developer. Final execution remains subject to sanctioned plans and written specifications.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section forest" id="experience">
+      <div class="container">
+        <div class="experience-heading">
+          <div><p class="eyebrow">Everyday experience</p><h2 class="display">Space to move. Space to pause.</h2></div>
+          <p class="intro">A community imagined around outdoor life, indoor sport and personal wellbeing.</p>
+        </div>
+        <div class="experiences">
+          <article class="experience"><img src="assets/optimized/08.webp" alt="Garden courts" loading="lazy" decoding="async"><div class="experience-copy"><small>Landscape</small><h3>Garden courts</h3><p>Open lawns, planting, shaded walks and places for quieter moments.</p></div></article>
+          <article class="experience"><img src="assets/optimized/Badminton_.webp" alt="Indoor badminton" loading="lazy" decoding="async"><div class="experience-copy"><small>Sport</small><h3>Indoor badminton</h3><p>A dedicated court for all-season recreation within the community.</p></div></article>
+          <article class="experience"><img src="assets/optimized/Gym.webp" alt="Fitness centre" loading="lazy" decoding="async"><div class="experience-copy"><small>Wellbeing</small><h3>Fitness centre</h3><p>A contemporary training environment close to home.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="panorama">
+      <div class="container panorama-copy">
+        <p class="hero-kicker">The landscape</p>
+        <h2>Green is not an amenity. It is the setting.</h2>
+        <p>From the entrance to internal courts and streets, the project identity is built around a continuous planted environment.</p>
+      </div>
+    </section>
+
+    <section class="section white" id="gallery">
+      <div class="container">
+        <div class="gallery-intro">
+          <div><p class="eyebrow">Project gallery</p><h2 class="display">A visual walk through Anant Greens.</h2></div>
+          <p class="intro">Architectural and landscape representations supplied with the project material.</p>
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-column">
+            <figure class="gallery-shot tall"><img src="assets/optimized/02.webp" alt="Anant Greens entrance" loading="lazy" decoding="async"><figcaption>01 · Main arrival</figcaption></figure>
+            <figure class="gallery-shot short"><img src="assets/optimized/07.webp" alt="Garden path" loading="lazy" decoding="async"><figcaption>03 · Garden paths</figcaption></figure>
+          </div>
+          <div class="gallery-column">
+            <figure class="gallery-shot medium"><img src="assets/optimized/09.webp" alt="Landscape court" loading="lazy" decoding="async"><figcaption>02 · Landscape court</figcaption></figure>
+            <figure class="gallery-shot tall"><img src="assets/optimized/12.webp" alt="Township detail" loading="lazy" decoding="async"><figcaption>04 · Township detail</figcaption></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section forest" id="maps">
+      <div class="container">
+        <div class="maps-head">
+          <div><p class="eyebrow">Explore the project</p><h2 class="display">Layout and location.</h2></div>
+          <p class="intro">Use the interactive layout for orientation and the Google link for live directions.</p>
+        </div>
+        <div class="map-shell">
+          <div class="tabs" role="tablist">
+            <button class="tab" id="layoutTab" type="button" role="tab" aria-selected="true" data-panel="layoutPanel">Interactive layout</button>
+            <button class="tab" id="locationTab" type="button" role="tab" aria-selected="false" data-panel="locationPanel">Site location</button>
+          </div>
+          <section class="map-panel active" id="layoutPanel" role="tabpanel">
+            <div class="map-frame"><iframe data-src="https://rahulshukla7024.github.io/Anant-Greens/#interactive-layout" title="Anant Greens interactive layout" loading="lazy"></iframe></div>
+            <div class="actions"><a class="btn light" href="https://rahulshukla7024.github.io/Anant-Greens/#interactive-layout" target="_blank" rel="noopener">Open full screen</a></div>
+          </section>
+          <section class="map-panel" id="locationPanel" role="tabpanel">
+            <div class="location">
+              <div class="location-copy">
+                <p class="eyebrow">Ashok Nagar, Sarkanda</p>
+                <h3>Connected to everyday Bilaspur.</h3>
+                <p>Project location stated as beside Patrakar Colony, with access to healthcare, education and institutional destinations.</p>
+                <ul class="landmarks">
+                  <li><span>SECL Headquarters</span><strong>Nearby</strong></li>
+                  <li><span>Apollo Hospital</span><strong>Nearby</strong></li>
+                  <li><span>Brilliant Public School</span><strong>Nearby</strong></li>
+                  <li><span>DLS College</span><strong>Nearby</strong></li>
+                  <li><span>Guru Ghasidas University</span><strong>Direct route</strong></li>
+                  <li><span>Patrakar Colony</span><strong>Beside site</strong></li>
+                </ul>
+                <div class="actions"><a class="btn" href="https://share.google/izvbR6SzeVCJeks29" target="_blank" rel="noopener">Open Google Maps</a></div>
+              </div>
+              <img src="assets/optimized/03.webp" alt="Anant Greens project visual" loading="lazy" decoding="async">
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="approvals">
+      <div class="container">
+        <div class="approval-head">
+          <div><p class="eyebrow">Approvals and disclosures</p><h2 class="display">Verify before you book.</h2><p class="intro">Brochure information is separated from document copies that still need to be uploaded. This page does not certify approvals.</p></div>
+          <div class="rera"><small>CG-RERA number stated in brochure</small><strong>PCGRERA270326002073</strong><p>Verify the project, promoter, land, validity and sanctioned plans on the official portal.</p><a class="btn" href="https://rera.cgstate.gov.in/" target="_blank" rel="noopener">Verify with CG-RERA</a></div>
+        </div>
+        <div class="approval-grid">
+          <div class="approval-column">
+            <div class="approval-title">Document centre</div>
+            <div class="document"><div><strong>RERA registration certificate</strong><p>Add the issued certificate PDF.</p></div><span class="status stated">Brochure detail</span></div>
+            <div class="document"><div><strong>T&CP sanctioned layout</strong><p>Add approval number, date, authority and conditions.</p></div><span class="status">Copy required</span></div>
+            <div class="document"><div><strong>Land-use / diversion order</strong><p>Add the applicable current permission.</p></div><span class="status">Copy required</span></div>
+            <div class="document"><div><strong>Colonizer and development permissions</strong><p>Add the current licence and local-body permission, where applicable.</p></div><span class="status">Copy required</span></div>
+            <div class="document"><div><strong>Title and encumbrance disclosures</strong><p>Add legal title and encumbrance documents.</p></div><span class="status">Copy required</span></div>
+          </div>
+          <div class="approval-column">
+            <div class="approval-title">Buyer checklist</div>
+            <ol class="checks">
+              <li>Match the project, promoter, land parcels, phase, validity and status with CG-RERA.</li>
+              <li>Compare the offered plot with the latest sanctioned layout, dimensions, roads and open spaces.</li>
+              <li>Review title, encumbrance, diversion, colonizer and development permissions independently.</li>
+              <li>Do not pay more than 10% before a written and registered Agreement for Sale under Section 13 of RERA.</li>
+              <li>Put pricing, timelines, specifications, cancellation and maintenance terms in writing.</li>
+            </ol>
+          </div>
+        </div>
+        <div class="official">
+          <a href="https://rera.cgstate.gov.in/" target="_blank" rel="noopener">CG-RERA</a>
+          <a href="https://tcp.cg.gov.in/" target="_blank" rel="noopener">Town & Country Planning</a>
+          <a href="https://albpms-dtcp.cgstate.gov.in/" target="_blank" rel="noopener">Layout permission portal</a>
+        </div>
+        <div class="disclaimer"><strong>Important:</strong> Visuals are artistic impressions. Landscaping, amenities, materials, dimensions, road proposals, distances and development details are indicative and subject to sanctioned plans, approvals, site conditions and the executed Agreement for Sale.</div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact">
+        <div class="contact-media">
+          <div class="contact-media-copy"><p class="hero-kicker">Arrange a visit</p><h2>See the place. Review the details.</h2><p>Speak with the project team about availability, pricing, documents and a private site visit.</p></div>
+        </div>
+        <div class="contact-panel">
+          <p class="eyebrow">Contact</p>
+          <div class="details">
+            <div class="detail"><small>Developer</small><strong>Shri Anant Creation</strong></div>
+            <div class="detail"><small>Address</small><strong>Ashok Nagar, Sarkanda, Bilaspur, Chhattisgarh. Beside Patrakar Colony.</strong></div>
+            <div class="detail"><small>Phone</small><strong>+91 91832 44419 / +91 97522 44419</strong></div>
+          </div>
+          <form id="enquiryForm">
+            <div class="form-message" id="formMessage"></div>
+            <div class="form-grid">
+              <label>Name<input type="text" name="name" placeholder="Your name" required></label>
+              <label>Phone<input type="tel" name="phone" placeholder="+91" required></label>
+              <label class="full">Email<input type="email" name="email" placeholder="you@example.com"></label>
+              <label class="full">Message<textarea name="message" placeholder="Plot, documents, pricing or site visit"></textarea></label>
+            </div>
+            <div class="actions"><button class="btn" type="submit">Submit enquiry</button><a class="btn outline" href="tel:+919183244419">Call now</a></div>
+            <p class="form-note">Connect a verified CRM or Google Sheets endpoint before using the form for live lead collection.</p>
+          </form>
+          <div class="actions"><a class="btn outline" href="https://www.instagram.com/shree_mangalam_estates/" target="_blank" rel="noopener">Instagram</a><a class="btn outline" href="https://www.facebook.com/shreemangalamestates/" target="_blank" rel="noopener">Facebook</a></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-row"><span class="footer-brand"><img class="footer-logo" src="assets/brand/anant-greens-logo-transparent.png" alt="Anant Greens"></span><div class="footer-links"><a href="#vision">Vision</a><a href="#maps">Maps</a><a href="#approvals">Approvals</a><a href="Anant%20Greens%20(E-%20Brochure)%20(1).pdf" target="_blank" rel="noopener">Brochure</a></div></div>
+      <div class="footer-legal">CG-RERA number shown as stated in the brochure: PCGRERA270326002073. Verify the current record at <a href="https://rera.cgstate.gov.in/" target="_blank" rel="noopener">rera.cgstate.gov.in</a>. This website is informational and is not legal, title, investment or approval certification.</div>
+    </div>
+  </footer>
+
+  <script>
+    const header = document.getElementById("header");
+    const menu = document.getElementById("menu");
+    const updateHeader = () => header.classList.toggle("scrolled", window.scrollY > 24);
+    window.addEventListener("scroll", updateHeader, { passive: true });
+    updateHeader();
+    menu.addEventListener("click", () => header.classList.toggle("open"));
+    header.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => header.classList.remove("open")));
+
+    const tabs = document.querySelectorAll(".tab");
+    const panels = document.querySelectorAll(".map-panel");
+    const iframe = document.querySelector(".map-frame iframe");
+    const loadMap = () => { if (iframe && !iframe.src) iframe.src = iframe.dataset.src; };
+    tabs.forEach((tab) => tab.addEventListener("click", () => {
+      tabs.forEach((item) => item.setAttribute("aria-selected", "false"));
+      panels.forEach((panel) => panel.classList.remove("active"));
+      tab.setAttribute("aria-selected", "true");
+      document.getElementById(tab.dataset.panel).classList.add("active");
+      if (tab.dataset.panel === "layoutPanel") loadMap();
+    }));
+    const mapObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) { loadMap(); mapObserver.disconnect(); }
+    }, { rootMargin: "280px" });
+    mapObserver.observe(document.getElementById("maps"));
+
+    const form = document.getElementById("enquiryForm");
+    const message = document.getElementById("formMessage");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const name = new FormData(form).get("name") || "there";
+      message.textContent = `Thank you, ${name}. The form interface is ready; connect the live lead endpoint before publishing.`;
+      message.classList.add("show");
+      form.reset();
+    });
+  </script>
+</body>
+</html>
