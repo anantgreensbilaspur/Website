@@ -1,0 +1,1813 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#052e1a">
+  <title>Anant Greens Plot Inventory</title>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L5Y60BVE22"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L5Y60BVE22');
+</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forest: "#08351e",
+            leaf: "#166534",
+            gold: "#d4af37",
+            paper: "#f6f8f5"
+          },
+          boxShadow: {
+            soft: "0 22px 55px rgba(15, 23, 42, 0.10)",
+            map: "0 28px 70px rgba(2, 6, 23, 0.24)"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 9% 3%, rgba(212, 175, 55, 0.18), transparent 23rem),
+        radial-gradient(circle at 88% 18%, rgba(34, 197, 94, 0.13), transparent 24rem),
+        linear-gradient(180deg, #f7faf7 0%, #edf3ef 100%);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+      -webkit-font-smoothing: antialiased;
+    }
+    * { -webkit-tap-highlight-color: transparent; }
+    input, textarea, select { font-size: 16px; }
+    .loader, .mini-loader {
+      border-radius: 9999px;
+      animation: spin 0.8s linear infinite;
+    }
+    .loader {
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 4px solid #dce8df;
+      border-top-color: #166534;
+    }
+    .mini-loader {
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      border-top-color: #fff;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .map-shell {
+      background: linear-gradient(180deg, #ffffff 0%, #f4f8f3 100%);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      overflow: hidden;
+    }
+    .map-stage {
+      contain: layout paint;
+      overscroll-behavior: contain;
+      touch-action: pan-x pan-y;
+      background: #f8faf7;
+      background-image:
+        linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
+      background-size: 32px 32px;
+      -webkit-overflow-scrolling: touch;
+    }
+    #mapObject {
+      align-items: flex-start;
+      height: max-content;
+      min-height: 100%;
+      min-width: 100%;
+      width: max-content;
+    }
+    #mapSvg {
+      height: 100%;
+      width: auto;
+      max-width: none;
+      display: block;
+      border-radius: 0.5rem;
+      background: #fff;
+      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.10);
+    }
+    select.status-select {
+      background-image:
+        linear-gradient(45deg, transparent 50%, #475569 50%),
+        linear-gradient(135deg, #475569 50%, transparent 50%);
+      background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+      background-repeat: no-repeat;
+      background-size: 5px 5px, 5px 5px;
+    }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden text-slate-900 antialiased">
+  <header class="relative z-40 border-b border-gold/40 bg-forest text-white shadow-lg lg:sticky lg:top-0">
+    <div class="mx-auto max-w-[1500px] px-4 py-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-end gap-x-3 gap-y-1">
+            <h1 class="text-2xl font-black tracking-tight sm:text-3xl">Anant <span class="text-gold">Greens</span></h1>
+            <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-bold text-emerald-50" data-i18n="plotMapInventory">Plot Map Inventory</span>
+          </div>
+          <p class="mt-1 text-sm font-medium text-emerald-100/85" data-i18n="tagline">Premium smart township development • Shri Anant Creation</p>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-[1fr_auto_auto] xl:w-[900px]">
+          <label class="relative block" for="searchInput">
+            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.3-4.3m1.3-5.7a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"></path>
+              </svg>
+            </span>
+            <input id="searchInput" type="search" autocomplete="off" placeholder="Search plot, type, size, status..." data-i18n-placeholder="searchPlaceholder"
+              class="h-12 w-full rounded-lg border border-white/15 bg-white py-3 pl-10 pr-4 text-base font-semibold text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-gold focus:ring-4 focus:ring-gold/20">
+            <div id="searchSuggestions" class="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-[80] hidden max-h-[70vh] overflow-y-auto rounded-xl border border-slate-200 bg-white p-2 text-slate-900 shadow-2xl"></div>
+          </label>
+
+          <button id="languageToggle" type="button" class="h-12 rounded-lg border border-white/15 bg-white/10 px-4 text-sm font-black text-white transition hover:bg-white/15" aria-label="Switch language">English</button>
+
+          <div class="flex items-center justify-between gap-3 rounded-lg border border-white/15 bg-white/10 p-2">
+            <div class="whitespace-nowrap text-right">
+              <p class="text-[11px] font-bold uppercase tracking-wide text-emerald-100/70" data-i18n="adminLock">Admin Lock</p>
+              <p id="modeLabel" class="text-sm font-black text-white">Locked</p>
+            </div>
+            <label class="relative inline-flex cursor-pointer items-center" for="adminToggle">
+              <input id="adminToggle" type="checkbox" class="peer sr-only" aria-label="Toggle admin mode">
+              <span class="h-8 w-14 rounded-full bg-white/25 transition peer-checked:bg-gold peer-focus:outline peer-focus:outline-2 peer-focus:outline-offset-2 peer-focus:outline-gold"></span>
+              <span class="absolute left-1 top-1 h-6 w-6 rounded-full bg-white shadow transition peer-checked:translate-x-6"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto flex max-w-[1500px] flex-col px-4 py-6 sm:px-6 lg:px-8">
+    <section class="order-3 mb-5 grid gap-3 sm:grid-cols-2 xl:order-1 xl:hidden xl:grid-cols-4">
+      <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="totalPlots">Total Plots</p>
+        <p id="totalCount" class="mt-1 text-3xl font-black text-slate-950">0</p>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="sold">Sold</p>
+        <p id="soldCount" class="mt-1 text-3xl font-black text-rose-700">0</p>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="available">Available</p>
+        <p id="availableCount" class="mt-1 text-3xl font-black text-sky-700">0</p>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="inTalk">In Talk</p>
+        <p id="inTalkCount" class="mt-1 text-3xl font-black text-amber-700">0</p>
+      </div>
+    </section>
+
+    <section class="order-1 grid gap-6 xl:order-2 xl:grid-cols-[minmax(0,1fr)_260px]">
+      <section class="map-shell order-2 rounded-xl p-3 shadow-soft sm:p-4 xl:order-1">
+        <div class="mb-3 flex flex-col gap-3 text-slate-950 lg:flex-row lg:items-center lg:justify-between">
+          <div id="interactive-layout">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-gold" data-i18n="interactiveLayout">Interactive Layout</p>
+            <h2 class="mt-1 text-xl font-black" data-i18n="liveMap">Live Plot Availability Map</h2>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="zoomOutBtn" type="button" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-black transition hover:bg-slate-100" aria-label="Zoom out">-</button>
+            <button id="zoomResetBtn" type="button" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-black transition hover:bg-slate-100" data-i18n="reset">Reset</button>
+            <button id="zoomInBtn" type="button" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-black transition hover:bg-slate-100" aria-label="Zoom in">+</button>
+          </div>
+        </div>
+
+        <div class="mb-3 flex w-full items-center gap-2 overflow-x-auto whitespace-nowrap pb-1 text-xs font-bold text-slate-700">
+          <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-sky-500"></span><span data-i18n="available">Available</span></span>
+          <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-amber-400"></span><span data-i18n="inTalk">In Talk</span></span>
+          <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-rose-500"></span><span data-i18n="sold">Sold</span></span>
+        </div>
+
+        <div id="mapStage" class="map-stage relative h-[64vh] min-h-[520px] overflow-auto rounded-lg border border-slate-200 p-4 sm:h-[72vh]">
+          <div id="mapLoading" class="absolute inset-0 z-10 flex items-center justify-center bg-slate-950/60 backdrop-blur-[2px] transition-opacity duration-300">
+            <div class="flex flex-col items-center gap-4 text-center text-white">
+              <div class="loader"></div>
+              <p class="text-sm font-bold" data-i18n="loadingMap">Loading plot map and sheet data</p>
+            </div>
+          </div>
+          <div id="mapObject" class="mx-auto flex h-full w-full items-center justify-center rounded-md">
+<svg id="mapSvg" width="1500" height="1364" viewBox="0 0 1500 1364" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<image id="layout-base" href="map-background.jpeg" xlink:href="map-background.jpeg" width="1500" height="1364" preserveAspectRatio="none" decoding="async"/>
+<g id="Plots-Layer" opacity="1">
+<path id="plot-114" d="M1216.82 256.575L1213.31 337.193L1173.71 319.543L1203.79 253.236L1216.82 256.575Z" stroke="white"/>
+<path id="plot-113" d="M1171.71 244.649L1203.79 253.713L1174.72 320.02L1143.64 305.709L1171.71 244.649Z" stroke="white"/>
+<path id="plot-112" d="M1171.71 244.649L1140.64 234.154L1112.57 292.352L1144.14 305.709L1171.71 244.649Z" stroke="white"/>
+<path id="plot-111" d="M1140.64 234.154L1110.57 222.229L1083 279.472L1112.57 292.352L1140.64 234.154Z" stroke="white"/>
+<path id="plot-110" d="M1109.64 221.677L1077.56 210.229L1051 266.041L1082.07 278.921L1109.64 221.677Z" stroke="white"/>
+<path id="plot-109" d="M1077.63 209.2L1046.56 198.229L1021 251.656L1051.57 265.013L1077.63 209.2Z" stroke="white"/>
+<path id="plot-108" d="M1015.56 188.229L1016.11 188.399M1016.11 188.399L1048.13 198.246L1022.07 252.151L992 237.84L1016.11 188.399Z" stroke="white"/>
+<path id="plot-107" d="M1018.13 187.677L986.055 176.229L963 223.455L994.073 237.765L1018.13 187.677Z" stroke="white"/>
+<path id="plot-106" d="M1213.93 366.197L1180.85 350.932L1152.78 412.946L1213.93 439.659V366.197Z" stroke="white"/>
+<rect id="plot-105" x="0.250531" y="0.647292" width="33.3641" height="67.3183" transform="matrix(0.921893 0.387444 -0.420831 0.907139 1150.25 337.17)" stroke="white"/>
+<rect id="plot-104" x="0.250531" y="0.647292" width="33.3641" height="67.3183" transform="matrix(0.921893 0.387444 -0.420831 0.907139 1120.18 324.181)" stroke="white"/>
+<rect id="plot-103" x="0.250531" y="0.647292" width="33.3641" height="67.3183" transform="matrix(0.921893 0.387444 -0.420831 0.907139 1090.11 311.192)" stroke="white"/>
+<path id="plot-102" d="M1213.43 439.182V487.839L1188.37 501.196L1155.29 485.454L1182.85 425.825L1213.43 439.182Z" stroke="white"/>
+<rect id="plot-101" x="0.250531" y="0.647292" width="31.1808" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 1154.55 412.909)" stroke="white"/>
+<rect id="plot-100" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 1123.47 399.552)" stroke="white"/>
+<rect id="plot-99" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 1092.4 386.195)" stroke="white"/>
+<rect id="plot-98" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 1061.33 372.838)" stroke="white"/>
+<rect id="plot-97" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 1028.47 282.905)" stroke="white"/>
+<rect id="plot-96" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 998.399 269.548)" stroke="white"/>
+<rect id="plot-95" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 968.328 256.192)" stroke="white"/>
+<rect id="plot-94" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 938.328 242.192)" stroke="white"/>
+<path id="plot-93" d="M908.036 228L939.57 241.253L911.535 301.687L880 288.434L908.036 228Z" stroke="white"/>
+<rect id="plot-92" x="0.250531" y="0.647292" width="31.6592" height="65.7578" transform="matrix(0.921893 0.387444 -0.420831 0.907139 878.386 214.633)" stroke="white"/>
+<rect id="plot-91" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 846.888 200.677)" stroke="white"/>
+<rect id="plot-90" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 816.817 187.32)" stroke="white"/>
+<rect id="plot-89" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 786.746 173.963)" stroke="white"/>
+<rect id="plot-88" x="0.250531" y="0.647292" width="32.7608" height="66.597" transform="matrix(0.921893 0.387444 -0.420831 0.907139 1002.29 344.192)" stroke="white"/>
+<rect id="plot-87" x="0.250531" y="0.647292" width="33.8749" height="66.8302" transform="matrix(0.921893 0.387444 -0.420831 0.907139 971.292 330.192)" stroke="white"/>
+<rect id="plot-86" x="0.250531" y="0.647292" width="34.0812" height="67.4511" transform="matrix(0.921893 0.387444 -0.420831 0.907139 941.292 316.192)" stroke="white"/>
+<rect id="plot-85" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 910.541 303.262)" stroke="white"/>
+<rect id="plot-84" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 880.47 289.905)" stroke="white"/>
+<rect id="plot-83" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 850.399 276.548)" stroke="white"/>
+<rect id="plot-82" x="0.250531" y="0.647292" width="34.0812" height="67.4511" transform="matrix(0.921893 0.387444 -0.420831 0.907139 820.292 261.192)" stroke="white"/>
+<rect id="plot-81" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 789.399 248.548)" stroke="white"/>
+<rect id="plot-80" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 759.328 235.192)" stroke="white"/>
+<rect id="plot-79" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 961.328 435.192)" stroke="white"/>
+<rect id="plot-78" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 929.328 420.192)" stroke="white"/>
+<rect id="plot-77" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 899.328 407.192)" stroke="white"/>
+<rect id="plot-76" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 869.328 393.192)" stroke="white"/>
+<rect id="plot-75" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 838.869 378.132)" stroke="white"/>
+<rect id="plot-74" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 808.798 364.775)" stroke="white"/>
+<rect id="plot-73" x="0.250531" y="0.647292" width="34.1452" height="67.5195" transform="matrix(0.921893 0.387444 -0.420831 0.907139 778.727 351.418)" stroke="white"/>
+<rect id="plot-72" x="0.250531" y="0.647292" width="32.61" height="66.3639" transform="matrix(0.921893 0.387444 -0.420831 0.907139 748.656 338.061)" stroke="white"/>
+<rect id="plot-71" x="0.250531" y="0.647292" width="33.2065" height="65.6199" transform="matrix(0.921893 0.387444 -0.420831 0.907139 718.328 324.192)" stroke="white"/>
+<rect id="plot-70" x="0.234963" y="0.652518" width="34.6446" height="65.9687" transform="matrix(0.912783 0.408444 -0.442858 0.896592 933.309 495.2)" stroke="white"/>
+<rect id="plot-69" x="0.234963" y="0.652518" width="32.8286" height="65.6807" transform="matrix(0.912783 0.408444 -0.442858 0.896592 902.839 482.2)" stroke="white"/>
+<rect id="plot-68" x="0.234963" y="0.652518" width="32.8286" height="65.6807" transform="matrix(0.912783 0.408444 -0.442858 0.896592 872.839 468.2)" stroke="white"/>
+<rect id="plot-67" x="0.234963" y="0.652518" width="33.1767" height="64.9633" transform="matrix(0.912783 0.408444 -0.442858 0.896592 842.522 454.058)" stroke="white"/>
+<rect id="plot-65" x="0.247663" y="0.648283" width="32.8523" height="65.6521" transform="matrix(0.920248 0.391336 -0.424922 0.90523 781.617 427.193)" stroke="white"/>
+<rect id="plot-66" x="0.234963" y="0.652518" width="32.8286" height="65.6807" transform="matrix(0.912783 0.408444 -0.442858 0.896592 811.839 440.2)" stroke="white"/>
+<rect id="plot-64" x="0.247663" y="0.648283" width="32.8523" height="64.6792" transform="matrix(0.920248 0.391336 -0.424922 0.90523 751.204 414.193)" stroke="white"/>
+<rect id="plot-63" x="0.247663" y="0.648283" width="32.8523" height="64.6792" transform="matrix(0.920248 0.391336 -0.424922 0.90523 721.204 400.193)" stroke="white"/>
+<rect id="plot-62" x="0.247663" y="0.648283" width="34.0101" height="66.9212" transform="matrix(0.920248 0.391336 -0.424922 0.90523 691.077 385.492)" stroke="white"/>
+<rect id="plot-61" x="0.247663" y="0.648283" width="35.0776" height="65.1507" transform="matrix(0.920248 0.391336 -0.424922 0.90523 905.204 591.193)" stroke="white"/>
+<rect id="plot-60" x="0.247663" y="0.648283" width="32.8523" height="64.6792" transform="matrix(0.920248 0.391336 -0.424922 0.90523 875.204 577.193)" stroke="white"/>
+<rect id="plot-59" x="0.247663" y="0.648283" width="32.8523" height="64.6792" transform="matrix(0.920248 0.391336 -0.424922 0.90523 844.204 563.193)" stroke="white"/>
+<rect id="plot-58" x="0.247663" y="0.648283" width="32.8523" height="64.6792" transform="matrix(0.920248 0.391336 -0.424922 0.90523 778.603 531.982)" stroke="white"/>
+<rect id="plot-57" x="0.247663" y="0.648283" width="32.8523" height="64.6792" transform="matrix(0.920248 0.391336 -0.424922 0.90523 748.532 518.38)" stroke="white"/>
+<rect id="plot-56" x="0.247663" y="0.648283" width="32.8523" height="64.6792" transform="matrix(0.920248 0.391336 -0.424922 0.90523 718.461 504.778)" stroke="white"/>
+<path id="plot-55" d="M717.822 505.536L690.257 492.656L683.241 508.875L673.718 533.203L664.195 552.285L690.257 564.687L717.822 505.536Z" stroke="white"/>
+<rect id="plot-54" x="0.247663" y="0.648283" width="32.8523" height="66.5165" transform="matrix(0.920248 0.391336 -0.424922 0.90523 876.984 651.193)" stroke="white"/>
+<rect id="plot-53" x="0.247663" y="0.648283" width="32.8523" height="66.5165" transform="matrix(0.920248 0.391336 -0.424922 0.90523 846.984 637.193)" stroke="white"/>
+<rect id="plot-52" x="0.247663" y="0.648283" width="32.8523" height="66.5165" transform="matrix(0.920248 0.391336 -0.424922 0.90523 816.984 623.193)" stroke="white"/>
+<rect id="plot-51" x="0.247663" y="0.648283" width="33.1788" height="66.5165" transform="matrix(0.920248 0.391336 -0.424922 0.90523 751.317 590.87)" stroke="white"/>
+<rect id="plot-50" x="0.247663" y="0.648283" width="34.0902" height="66.496" transform="matrix(0.920248 0.391336 -0.424922 0.90523 720.235 576.578)" stroke="white"/>
+<rect id="plot-49" x="0.260328" y="0.643807" width="32.3706" height="66.4472" transform="matrix(0.9274 0.374071 -0.406744 0.913542 690.203 564.168)" stroke="white"/>
+<path id="plot-48" d="M690.257 564.687L664.697 553.239L655.675 568.504L645.15 586.631L632.12 610.959L664.697 625.27L690.257 564.687Z" stroke="white"/>
+<path id="plot-47" d="M841.179 815.229L867 755.975L837.282 742.229L810 800.06L841.179 815.229Z" stroke="white"/>
+<rect id="plot-46" x="0.242421" y="0.650061" width="32.8474" height="64.782" transform="matrix(0.917202 0.398422 -0.43236 0.901701 807.743 728.196)" stroke="white"/>
+<rect id="plot-45" x="0.242421" y="0.650061" width="32.8474" height="64.782" transform="matrix(0.917202 0.398422 -0.43236 0.901701 777.743 714.196)" stroke="white"/>
+<rect id="plot-44" x="0.242421" y="0.650061" width="32.8474" height="64.782" transform="matrix(0.917202 0.398422 -0.43236 0.901701 711.344 682.355)" stroke="white"/>
+<rect id="plot-43" x="0.23977" y="0.650944" width="32.8425" height="64.7923" transform="matrix(0.915643 0.401992 -0.436102 0.899897 681.163 669.126)" stroke="white"/>
+<rect id="plot-42" x="0.241641" y="0.650322" width="32.3371" height="64.785" transform="matrix(0.916745 0.399473 -0.433463 0.901171 650.913 654.814)" stroke="white"/>
+<path id="plot-41" d="M651.666 655.323L617.585 640.058L600.545 672.496L596.034 686.33L588.015 698.733L623.098 713.998L651.666 655.323Z" stroke="white"/>
+<path id="plot-40" d="M828.111 840.822L840.641 816.017L808.064 801.229L781 860.38L828.111 881.847V840.822Z" stroke="white"/>
+<rect id="plot-39" x="0.252035" y="0.646767" width="32.3559" height="65.9331" transform="matrix(0.92275 0.3854 -0.41868 0.908134 779.314 787.191)" stroke="white"/>
+<rect id="plot-38" x="0.247653" y="0.648286" width="32.3481" height="66.728" transform="matrix(0.920242 0.391349 -0.424936 0.905223 750.075 774.193)" stroke="white"/>
+<rect id="plot-37" x="0.243264" y="0.649778" width="32.3401" height="64.7788" transform="matrix(0.917695 0.397285 -0.431168 0.902272 683.836 741.632)" stroke="white"/>
+<rect id="plot-36" x="0.238866" y="0.651243" width="32.332" height="64.7958" transform="matrix(0.915108 0.403208 -0.437377 0.899278 654.186 728.278)" stroke="white"/>
+<rect id="plot-35" x="0.23446" y="0.65268" width="32.3238" height="64.8129" transform="matrix(0.912482 0.409116 -0.443561 0.896244 624.504 714.962)" stroke="white"/>
+<path id="plot-34" d="M624.101 714.952L588.517 699.21L553.935 755.022L596.034 774.58L624.101 714.952Z" stroke="white"/>
+<path id="plot-33" d="M830 918.015L799 904.719L770 962.652L828.5 989.719L830 918.015Z" stroke="white"/>
+<rect id="plot-32" x="0.223614" y="0.652095" width="32.3372" height="64.3717" transform="matrix(0.908854 0.417115 -0.461625 0.887075 769.349 890.164)" stroke="white"/>
+<rect id="plot-31" x="0.231745" y="0.649621" width="33.7745" height="66.0505" transform="matrix(0.913725 0.406332 -0.450236 0.89291 738.727 873.975)" stroke="white"/>
+<rect id="plot-30" x="0.239852" y="0.647055" width="33.622" height="66.1116" transform="matrix(0.918464 0.395505 -0.438759 0.898605 707.95 859.971)" stroke="white"/>
+<rect id="plot-29" x="0.249347" y="0.647702" width="33.7706" height="66.8264" transform="matrix(0.921216 0.389052 -0.422521 0.906353 643.028 829.09)" stroke="white"/>
+<rect id="plot-28" x="0.249347" y="0.647702" width="31.006" height="65.4288" transform="matrix(0.921216 0.389052 -0.422521 0.906353 614.372 817)" stroke="white"/>
+<rect id="plot-27" x="0.249347" y="0.647702" width="33.7706" height="65.4288" transform="matrix(0.921216 0.389052 -0.422521 0.906353 582.896 803.684)" stroke="white"/>
+<path id="plot-26" d="M582.502 804.633L538.899 784.598L513.339 845.181L554.937 863.308L582.502 804.633Z" stroke="white"/>
+<path id="plot-25" d="M800 976.719L828 988.911L826.5 1059.72L773 1035.33L800 976.719Z" stroke="white"/>
+<path id="plot-24" d="M773.261 1035.72L801 976.895L770.235 963.719L743 1022.54L773.261 1035.72Z" stroke="white"/>
+<path id="plot-23" d="M743.526 1022.72L771 962.991L740.474 949.719L713 1008.97L743.526 1022.72Z" stroke="white"/>
+<path id="plot-22" d="M712.5 1008.72L740 949.342L710.5 936.719L682 995.628L712.5 1008.72Z" stroke="white"/>
+<path id="plot-21" d="M653 981.601L680.739 923.719L711 936.425L682.757 995.719L653 981.601Z" stroke="white"/>
+<path id="plot-20" d="M617.585 963.961L645.15 903.855L615.079 890.976L588.015 950.127L617.585 963.961Z" stroke="white"/>
+<path id="plot-19" d="M588.015 950.127L615.079 890.499L585.51 877.142L557.944 936.293L588.015 950.127Z" stroke="white"/>
+<path id="plot-18" d="M558.445 936.77L585.509 877.142L555.438 863.785L527.372 923.414L558.445 936.77Z" stroke="white"/>
+<path id="plot-17" d="M527.372 923.414L490.284 906.717L513.339 845.181L555.94 863.785L527.372 923.414Z" stroke="white"/>
+<path id="plot-16" d="M574.966 1056L602 995.197L573.034 982L546 1042.33L574.966 1056Z" stroke="white"/>
+<path id="plot-15" d="M545.475 1042L573 982.103L544 969L515 1028.43L545.475 1042Z" stroke="white"/>
+<path id="plot-14" d="M515 1028L543 968.484L513.552 955L487 1014.05L515 1028Z" stroke="white"/>
+<path id="plot-13" d="M513 954.893L477.798 940L454 999.107L485.731 1014L513 954.893Z" stroke="white"/>
+<path id="plot-12" d="M826.078 1128.06V1191.06H792.078V1128.06H826.078Z" stroke="white"/>
+<path id="plot-11" d="M793.078 1128.06H759.078V1191.06H793.078V1128.06Z" stroke="white"/>
+<path id="plot-10" d="M759.078 1191.06V1128.06H726.078V1191.06H759.078Z" stroke="white"/>
+<path id="plot-9" d="M726.078 1191.06V1129.06H693.078L694.063 1191.06H726.078Z" stroke="white"/>
+<path id="plot-8" d="M693.078 1191.06L692.093 1129.06H660.078V1191.06H693.078Z" stroke="white"/>
+<path id="plot-7" d="M659.078 1191.06V1129.06H625.078L626.078 1191.06H659.078Z" stroke="white"/>
+<path id="plot-6" d="M624.108 1129.06H593.078V1191.06H625.078L624.108 1129.06Z" stroke="white"/>
+<path id="plot-5" d="M553.078 1131.06H520.078V1191.06H554.078L553.078 1131.06Z" stroke="white"/>
+<path id="plot-4" d="M520.078 1191.06V1131.06H487.078V1191.06H520.078Z" stroke="white"/>
+<path id="plot-3" d="M487.078 1191.06V1131.06H454.078V1191.06H487.078Z" stroke="white"/>
+<path id="plot-2" d="M454.078 1191.06V1131.06H420.078V1191.06H454.078Z" stroke="white"/>
+<path id="plot-1" d="M419.078 1191.06H368.078L397.078 1131.06H419.078V1191.06Z" stroke="white"/>
+</g>
+</svg>
+
+
+          </div>
+        </div>
+
+      </section>
+
+      <aside class="order-1 space-y-5 xl:order-2">
+        <section class="rounded-xl border border-slate-200 bg-white p-5 shadow-soft xl:hidden">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="availability">Availability</span>
+              <select id="statusFilter" class="mt-2 h-12 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm font-bold text-slate-800 outline-none focus:border-leaf focus:ring-4 focus:ring-emerald-100">
+                <option value="" data-i18n="allAssets">All Assets</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="findPlot">Find Plot #</span>
+              <input id="plotFinder" inputmode="numeric" placeholder="77" class="mt-2 h-12 w-full rounded-lg border border-slate-300 px-3 text-sm font-bold text-slate-800 outline-none focus:border-leaf focus:ring-4 focus:ring-emerald-100">
+            </label>
+          </div>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <button id="clearBtn" type="button" class="h-11 rounded-lg border border-slate-300 bg-slate-100 px-4 text-sm font-black text-slate-700 transition hover:bg-slate-200" data-i18n="clearSelection">Clear Selection</button>
+            <button id="refreshBtn" type="button" class="h-11 rounded-lg bg-forest px-4 text-sm font-black text-white transition hover:bg-leaf" data-i18n="refreshSheet">Refresh Sheet</button>
+          </div>
+        </section>
+
+        <section class="hidden rounded-xl border border-slate-200 bg-white p-4 shadow-soft xl:block">
+          <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="totalPlots">Total Plots</p>
+          <p id="desktopTotalCount" class="mt-1 text-3xl font-black text-slate-950">0</p>
+        </section>
+        <section class="hidden rounded-xl border border-slate-200 bg-white p-4 shadow-soft xl:block">
+          <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="available">Available</p>
+          <p id="desktopAvailableCount" class="mt-1 text-3xl font-black text-sky-700">0</p>
+        </section>
+        <section class="hidden rounded-xl border border-slate-200 bg-white p-4 shadow-soft xl:block">
+          <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="sold">Sold</p>
+          <p id="desktopSoldCount" class="mt-1 text-3xl font-black text-rose-700">0</p>
+        </section>
+        <section class="hidden rounded-xl border border-slate-200 bg-white p-4 shadow-soft xl:block">
+          <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="inTalk">In Talk</p>
+          <p id="desktopInTalkCount" class="mt-1 text-3xl font-black text-amber-700">0</p>
+        </section>
+
+        <section id="selectedPanel" class="hidden rounded-xl border border-slate-200 bg-white p-5 shadow-soft">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="selectedPlot">Selected Plot</p>
+              <h2 id="selectedTitle" class="mt-1 text-2xl font-black text-slate-950">Select a plot</h2>
+            </div>
+            <span id="selectedBadge" class="rounded-lg bg-slate-100 px-3 py-2 text-xs font-black text-slate-600">None</span>
+          </div>
+          <div id="selectedDetails" class="mt-5 grid gap-3"></div>
+        </section>
+
+        <section id="errorState" class="hidden rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm">
+          <p class="font-black text-red-900" data-i18n="unableLoad">Unable to load database</p>
+          <p id="errorMessage" class="mt-1 text-sm font-medium text-red-700" data-i18n="checkUrl">Please check the deployment URL.</p>
+        </section>
+      </aside>
+    </section>
+
+  </main>
+
+  <footer class="mx-auto max-w-[1500px] px-4 pb-6 text-center text-xs font-bold text-slate-500 sm:px-6 lg:px-8">
+    <span>Built and maintained by Kinetix Solutions</span>
+  </footer>
+
+  <div id="introModal" class="fixed inset-0 z-[70] hidden bg-slate-950/60 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+    <div class="mx-auto mt-24 max-w-sm rounded-xl bg-white p-6 text-center shadow-2xl">
+      <p id="introTitle" class="text-xs font-black uppercase tracking-[0.2em] text-gold" data-i18n="welcome">Welcome</p>
+      <h2 class="mt-2 text-2xl font-black text-slate-950" data-i18n="introTitle">Click the plot for its details</h2>
+      <p class="mt-2 text-sm font-semibold text-slate-600" data-i18n="introHelp">Tap any plot on the map to view its details.</p>
+      <button id="introOkBtn" type="button" class="mt-5 h-11 w-full rounded-lg bg-forest px-4 text-sm font-black text-white transition hover:bg-leaf" data-i18n="ok">OK</button>
+    </div>
+  </div>
+
+  <div id="enquiryModal" class="fixed inset-0 z-50 hidden bg-slate-950/55 p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div class="mx-auto mt-10 max-h-[82vh] max-w-md overflow-y-auto rounded-xl bg-white p-5 shadow-2xl md:mt-16">
+      <div class="mb-4">
+        <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="quickEnquiry">Quick Enquiry</p>
+        <h2 class="mt-1 text-2xl font-black text-slate-950">Interested in Plot #<span id="enquiryPlotNumber">-</span>?</h2>
+        <p class="mt-2 text-sm text-slate-600" data-i18n="enquiryHelp">Fill this quick form to view plot details and get in touch with our team.</p>
+      </div>
+      <form id="enquiryForm" class="grid gap-4">
+        <label class="block">
+          <span class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="fullName">Full Name</span>
+          <input id="enquiryName" type="text" required placeholder="Your name" data-i18n-placeholder="namePlaceholder" class="mt-2 h-11 w-full rounded-lg border border-slate-300 px-3 text-sm font-semibold text-slate-900 outline-none focus:border-leaf focus:ring-4 focus:ring-emerald-100">
+        </label>
+        <label class="block">
+          <span class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="address">Address</span>
+          <textarea id="enquiryAddress" required placeholder="Your address" data-i18n-placeholder="addressPlaceholder" class="mt-2 min-h-24 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-900 outline-none focus:border-leaf focus:ring-4 focus:ring-emerald-100"></textarea>
+        </label>
+        <label class="block">
+          <span class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="mobileNumber">Mobile Number</span>
+          <input id="enquiryMobile" type="tel" required placeholder="+91 98765 43210" pattern="[0-9+\s\-]+" class="mt-2 h-11 w-full rounded-lg border border-slate-300 px-3 text-sm font-semibold text-slate-900 outline-none focus:border-leaf focus:ring-4 focus:ring-emerald-100">
+        </label>
+        <div class="flex gap-3 pt-2">
+          <button id="submitEnquiryBtn" type="submit" class="w-full h-11 rounded-lg bg-forest px-4 text-sm font-black text-white transition hover:bg-leaf" data-i18n="submitView">Submit & View</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="plotModal" class="fixed inset-0 z-50 hidden bg-slate-950/55 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="mx-auto mt-10 max-h-[82vh] max-w-md overflow-y-auto rounded-xl bg-white p-5 shadow-2xl md:mt-16 md:max-w-xl">
+      <div class="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="selectedPlot">Selected Plot</p>
+          <h2 id="modalTitle" class="mt-1 text-2xl font-black text-slate-950">Plot Details</h2>
+        </div>
+        <button id="modalCloseBtn" type="button" class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-xl font-black text-slate-700" aria-label="Close plot details">×</button>
+      </div>
+      <span id="modalBadge" class="mb-4 inline-flex rounded-lg bg-slate-100 px-3 py-2 text-xs font-black text-slate-600">None</span>
+      <div id="modalDetails" class="grid gap-3"></div>
+    </div>
+  </div>
+
+  <div id="toastRegion" class="fixed bottom-4 right-4 z-[60] flex w-[calc(100%-2rem)] max-w-sm flex-col gap-2 sm:w-full" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9gej3uw5uLX5fNwKd-kkLL1lR0jTANmPN2Ti774YGge4rONqX5CTiq-2smEU5fr63wg/exec";
+
+    const STATUS_OPTIONS = ["Available", "In Talk", "Sold"];
+    const ID_KEYS = ["rowId", "rowID", "Row ID", "RowID", "id", "ID", "Id", "plotno", "Plot No", "plotId", "Plot ID", "serial", "Serial", "S.No", "S No"];
+    const STATUS_KEYS = ["status", "Status", "STATUS", "currentStatus", "Current Status"];
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    const I18N = {
+      hi: {
+        languageButton: "English",
+        plotMapInventory: "प्लॉट मैप इन्वेंटरी",
+        tagline: "प्रीमियम स्मार्ट टाउनशिप डेवलपमेंट • श्री अनंत क्रिएशन",
+        searchPlaceholder: "प्लॉट, प्रकार, साइज, स्टेटस खोजें...",
+        adminLock: "एडमिन लॉक",
+        locked: "लॉक",
+        unlocked: "अनलॉक",
+        totalPlots: "कुल प्लॉट",
+        sold: "बिक गया",
+        available: "उपलब्ध",
+        inTalk: "बातचीत में",
+        interactiveLayout: "इंटरैक्टिव लेआउट",
+        liveMap: "लाइव प्लॉट उपलब्धता मैप",
+        reset: "रीसेट",
+        loadingMap: "प्लॉट मैप और शीट डेटा लोड हो रहा है",
+        availability: "उपलब्धता",
+        allAssets: "सभी प्लॉट",
+        findPlot: "प्लॉट # खोजें",
+        clearSelection: "चयन हटाएं",
+        refreshSheet: "शीट रिफ्रेश करें",
+        selectedPlot: "चुना गया प्लॉट",
+        selectPlot: "प्लॉट चुनें",
+        none: "कोई नहीं",
+        unableLoad: "डेटाबेस लोड नहीं हुआ",
+        checkUrl: "कृपया डिप्लॉयमेंट URL जांचें।",
+        quickEnquiry: "त्वरित पूछताछ",
+        interestedPlot: "प्लॉट #{plot} में रुचि है?",
+        enquiryHelp: "प्लॉट विवरण देखने और हमारी टीम से संपर्क के लिए यह छोटा फॉर्म भरें।",
+        fullName: "पूरा नाम",
+        namePlaceholder: "आपका नाम",
+        address: "पता",
+        addressPlaceholder: "आपका पता",
+        mobileNumber: "मोबाइल नंबर",
+        submitView: "सबमिट करें और देखें",
+        plotDetails: "प्लॉट विवरण",
+        welcome: "स्वागत है",
+        introTitle: "प्लॉट की जानकारी के लिए प्लॉट पर क्लिक करें",
+        introHelp: "मैप पर किसी भी प्लॉट पर टैप करके उसकी जानकारी देखें।",
+        ok: "ठीक है",
+        status: "स्टेटस",
+        searchPlotNumbers: "प्लॉट नंबर",
+        searchAreaDimensions: "एरिया और साइज",
+        searchPrice: "रेट और कुल राशि",
+        searchPlotType: "प्लॉट प्रकार",
+        searchStatus: "स्टेटस",
+        noSuggestions: "कोई सुझाव नहीं मिला",
+        searchMatches: "मिलते हुए परिणाम",
+        pending: "पेंडिंग",
+        inProgress: "प्रगति में",
+        completed: "पूरा हुआ",
+        approved: "स्वीकृत",
+        plotType: "प्लॉट प्रकार",
+        dimensions: "साइज",
+        area: "एरिया",
+        rate: "रेट",
+        total: "कुल",
+        interestedPeople: "रुचि रखने वाले लोग",
+        people: "लोग",
+        updateInterestedCount: "रुचि संख्या अपडेट करें",
+        save: "सेव",
+        updatingStatus: "स्टेटस अपडेट हो रहा है...",
+        statusUpdated: "स्टेटस अपडेट हो गया!",
+        statusError: "स्टेटस अपडेट नहीं हुआ",
+        interestedUpdated: "रुचि संख्या अपडेट हो गई!",
+        interestedError: "रुचि संख्या अपडेट नहीं हुई",
+        requiredFields: "कृपया सभी जरूरी जानकारी भरें",
+        enquirySuccess: "पूछताछ सफलतापूर्वक भेजी गई!",
+        plotNotFound: "प्लॉट #{plot} शीट में नहीं मिला",
+        adminPassword: "एडमिन पासवर्ड डालें",
+        incorrectPassword: "एडमिन पासवर्ड गलत है",
+        closePlotDetails: "प्लॉट विवरण बंद करें",
+        loadErrorSuffix: "कृपया पुष्टि करें कि वेब ऐप public access के लिए deployed है और JSON return कर रहा है।"
+      },
+      en: {
+        languageButton: "हिन्दी",
+        plotMapInventory: "Plot Map Inventory",
+        tagline: "Premium smart township development • Shri Anant Creation",
+        searchPlaceholder: "Search plot, type, size, status...",
+        adminLock: "Admin Lock",
+        locked: "Locked",
+        unlocked: "Unlocked",
+        totalPlots: "Total Plots",
+        sold: "Sold",
+        available: "Available",
+        inTalk: "In Talk",
+        interactiveLayout: "Interactive Layout",
+        liveMap: "Live Plot Availability Map",
+        reset: "Reset",
+        loadingMap: "Loading plot map and sheet data",
+        availability: "Availability",
+        allAssets: "All Assets",
+        findPlot: "Find Plot #",
+        clearSelection: "Clear Selection",
+        refreshSheet: "Refresh Sheet",
+        selectedPlot: "Selected Plot",
+        selectPlot: "Select a plot",
+        none: "None",
+        unableLoad: "Unable to load database",
+        checkUrl: "Please check the deployment URL.",
+        quickEnquiry: "Quick Enquiry",
+        interestedPlot: "Interested in Plot #{plot}?",
+        enquiryHelp: "Fill this quick form to view plot details and get in touch with our team.",
+        fullName: "Full Name",
+        namePlaceholder: "Your name",
+        address: "Address",
+        addressPlaceholder: "Your address",
+        mobileNumber: "Mobile Number",
+        submitView: "Submit & View",
+        plotDetails: "Plot Details",
+        welcome: "Welcome",
+        introTitle: "Click the plot for its details",
+        introHelp: "Tap any plot on the map to view its details.",
+        ok: "OK",
+        status: "Status",
+        searchPlotNumbers: "Plot Numbers",
+        searchAreaDimensions: "Area & Dimensions",
+        searchPrice: "Rate & Total Amount",
+        searchPlotType: "Plot Type",
+        searchStatus: "Status",
+        noSuggestions: "No suggestions found",
+        searchMatches: "Matches",
+        pending: "Pending",
+        inProgress: "In Progress",
+        completed: "Completed",
+        approved: "Approved",
+        plotType: "Plot Type",
+        dimensions: "Dimensions",
+        area: "Area",
+        rate: "Rate",
+        total: "Total",
+        interestedPeople: "Interested People",
+        people: "people",
+        updateInterestedCount: "Update Interested Count",
+        save: "Save",
+        updatingStatus: "Updating status...",
+        statusUpdated: "Status updated successfully!",
+        statusError: "Error updating status",
+        interestedUpdated: "Interested count updated successfully!",
+        interestedError: "Error updating interested count",
+        requiredFields: "Please fill all required fields",
+        enquirySuccess: "Enquiry submitted successfully!",
+        plotNotFound: "Plot #{plot} was not found in the sheet",
+        adminPassword: "Enter admin password",
+        incorrectPassword: "Incorrect admin password",
+        closePlotDetails: "Close plot details",
+        loadErrorSuffix: "Confirm that the web app is deployed for public access and returns JSON."
+      }
+    };
+
+    const state = {
+      rows: [],
+      filteredRows: [],
+      columns: [],
+      query: "",
+      statusFilter: "",
+      searchMode: "mixed",
+      lang: "hi",
+      isAdmin: false,
+      isLoading: false,
+      selectedId: "",
+      updatingIds: new Set(),
+      statusKey: "status",
+      mapDoc: null,
+      mapReady: false,
+      zoom: 1,
+      pinchStartDistance: 0,
+      pinchStartZoom: 1,
+      enquirySubmittedThisSession: false,
+      interestedCountMap: {}
+    };
+
+    const els = {
+      adminToggle: document.getElementById("adminToggle"),
+      modeLabel: document.getElementById("modeLabel"),
+      searchInput: document.getElementById("searchInput"),
+      searchSuggestions: document.getElementById("searchSuggestions"),
+      statusFilter: document.getElementById("statusFilter"),
+      plotFinder: document.getElementById("plotFinder"),
+      clearBtn: document.getElementById("clearBtn"),
+      refreshBtn: document.getElementById("refreshBtn"),
+      zoomInBtn: document.getElementById("zoomInBtn"),
+      zoomOutBtn: document.getElementById("zoomOutBtn"),
+      zoomResetBtn: document.getElementById("zoomResetBtn"),
+      mapObject: document.getElementById("mapObject"),
+      mapLoading: document.getElementById("mapLoading"),
+      errorState: document.getElementById("errorState"),
+      errorMessage: document.getElementById("errorMessage"),
+      selectedTitle: document.getElementById("selectedTitle"),
+      selectedBadge: document.getElementById("selectedBadge"),
+      selectedDetails: document.getElementById("selectedDetails"),
+      enquiryModal: document.getElementById("enquiryModal"),
+      enquiryForm: document.getElementById("enquiryForm"),
+      enquiryPlotNumber: document.getElementById("enquiryPlotNumber"),
+      enquiryName: document.getElementById("enquiryName"),
+      enquiryAddress: document.getElementById("enquiryAddress"),
+      enquiryMobile: document.getElementById("enquiryMobile"),
+      submitEnquiryBtn: document.getElementById("submitEnquiryBtn"),
+      plotModal: document.getElementById("plotModal"),
+      modalCloseBtn: document.getElementById("modalCloseBtn"),
+      modalTitle: document.getElementById("modalTitle"),
+      modalBadge: document.getElementById("modalBadge"),
+      modalDetails: document.getElementById("modalDetails"),
+      toastRegion: document.getElementById("toastRegion"),
+      totalCount: document.getElementById("totalCount"),
+      soldCount: document.getElementById("soldCount"),
+      availableCount: document.getElementById("availableCount"),
+      inTalkCount: document.getElementById("inTalkCount"),
+      desktopTotalCount: document.getElementById("desktopTotalCount"),
+      desktopSoldCount: document.getElementById("desktopSoldCount"),
+      desktopAvailableCount: document.getElementById("desktopAvailableCount"),
+      desktopInTalkCount: document.getElementById("desktopInTalkCount"),
+      languageToggle: document.getElementById("languageToggle"),
+      introModal: document.getElementById("introModal"),
+      introOkBtn: document.getElementById("introOkBtn")
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      applyTranslations();
+      openIntroModal();
+      els.adminToggle.addEventListener("change", handleAdminToggle);
+      els.languageToggle.addEventListener("click", toggleLanguage);
+      els.introOkBtn.addEventListener("click", closeIntroModal);
+      els.searchInput.addEventListener("input", event => {
+        state.query = event.target.value.trim().toLowerCase();
+        state.searchMode = classifySearchInput(state.query);
+        applyFilters();
+        renderSearchSuggestions();
+      });
+      els.searchInput.addEventListener("focus", renderSearchSuggestions);
+      els.searchInput.addEventListener("keydown", event => {
+        if (event.key === "Escape") hideSearchSuggestions();
+      });
+      document.addEventListener("click", event => {
+        if (!event.target.closest("#searchInput") && !event.target.closest("#searchSuggestions")) {
+          hideSearchSuggestions();
+        }
+      });
+      els.statusFilter?.addEventListener("change", event => {
+        state.statusFilter = event.target.value;
+        applyFilters();
+      });
+      els.plotFinder?.addEventListener("input", handlePlotFinder);
+      els.clearBtn?.addEventListener("click", clearSelection);
+      els.refreshBtn?.addEventListener("click", fetchRows);
+      els.zoomInBtn.addEventListener("click", () => setZoom(state.zoom + 0.12));
+      els.zoomOutBtn.addEventListener("click", () => setZoom(state.zoom - 0.12));
+      els.zoomResetBtn.addEventListener("click", () => setZoom(1));
+      els.enquiryForm.addEventListener("submit", handleEnquirySubmit);
+      els.enquiryModal.addEventListener("click", event => {
+        if (event.target === els.enquiryModal) closeEnquiryModal();
+      });
+      els.modalCloseBtn.addEventListener("click", closePlotModal);
+      els.plotModal.addEventListener("click", event => {
+        if (event.target === els.plotModal) closePlotModal();
+      });
+      setupPinchZoom();
+      initializeMap();
+      fetchRows();
+    });
+
+    function t(key, params = {}) {
+      const template = I18N[state.lang]?.[key] ?? I18N.en[key] ?? key;
+      return Object.entries(params).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, value), template);
+    }
+
+    function toggleLanguage() {
+      state.lang = state.lang === "hi" ? "en" : "hi";
+      applyTranslations();
+      populateStatusFilter();
+      render();
+      renderSearchSuggestions();
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = state.lang;
+      document.querySelectorAll("[data-i18n]").forEach(element => {
+        element.textContent = t(element.dataset.i18n);
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+        element.placeholder = t(element.dataset.i18nPlaceholder);
+      });
+      els.languageToggle.textContent = t("languageButton");
+      els.modeLabel.textContent = state.isAdmin ? t("unlocked") : t("locked");
+      els.modalCloseBtn.setAttribute("aria-label", t("closePlotDetails"));
+      if (els.enquiryPlotNumber.textContent !== "-") updateEnquiryTitle(els.enquiryPlotNumber.textContent);
+    }
+
+    function openIntroModal() {
+      els.introModal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    }
+
+    function closeIntroModal() {
+      els.introModal.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    function updateEnquiryTitle(plotId) {
+      const title = els.enquiryModal.querySelector("h2");
+      const safePlotId = escapeHTML(plotId);
+      if (title) {
+        title.innerHTML = state.lang === "hi"
+          ? `प्लॉट #<span id="enquiryPlotNumber">${safePlotId}</span> में रुचि है?`
+          : `Interested in Plot #<span id="enquiryPlotNumber">${safePlotId}</span>?`;
+      }
+      els.enquiryPlotNumber = document.getElementById("enquiryPlotNumber");
+    }
+
+    function translateStatus(status) {
+      switch (normalizeStatus(status)) {
+        case "available": return t("available");
+        case "sold": return t("sold");
+        case "in-talk": return t("inTalk");
+        case "pending": return t("pending");
+        case "in-progress": return t("inProgress");
+        case "completed": return t("completed");
+        case "approved": return t("approved");
+        default: return stringifyValue(status) || "-";
+      }
+    }
+
+    async function fetchRows() {
+      setLoading(true);
+      hideError();
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, { method: "GET", cache: "no-store" });
+        if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+
+        const payload = await response.json();
+        const rows = normalizeResponse(payload);
+        state.rows = rows.map((row, index) => ({ ...row, __clientRowIndex: index + 1 }));
+        state.columns = getColumns(state.rows);
+        state.statusKey = findStatusKey(state.columns);
+        populateStatusFilter();
+        
+        // Load interested count data
+        if (payload.interestedCounts && typeof payload.interestedCounts === 'object') {
+          state.interestedCountMap = payload.interestedCounts;
+        }
+        
+        applyFilters();
+      } catch (error) {
+        state.rows = [];
+        state.filteredRows = [];
+        render();
+        showError(error.message || "Unknown loading error");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function normalizeResponse(payload) {
+      const rows = Array.isArray(payload)
+        ? payload
+        : Array.isArray(payload?.data)
+          ? payload.data
+          : Array.isArray(payload?.rows)
+            ? payload.rows
+            : [];
+
+      return rows
+        .filter(item => item && typeof item === "object" && !Array.isArray(item))
+        .map(item => Object.fromEntries(Object.entries(item).filter(([key]) => !key.startsWith("__"))));
+    }
+
+    function getColumns(rows) {
+      const seen = new Set();
+      rows.forEach(row => Object.keys(row).forEach(key => {
+        if (!key.startsWith("__")) seen.add(key);
+      }));
+
+      const columns = Array.from(seen);
+      const statusKey = findStatusKey(columns);
+      return statusKey ? [...columns.filter(column => column !== statusKey), statusKey] : columns;
+    }
+
+    function findStatusKey(columns) {
+      return STATUS_KEYS.find(key => columns.includes(key))
+        || columns.find(key => key.toLowerCase().trim() === "status")
+        || "status";
+    }
+
+    function findRowId(row) {
+      for (const key of ID_KEYS) {
+        if (row[key] !== undefined && row[key] !== null && String(row[key]).trim() !== "") {
+          return String(row[key]).trim();
+        }
+      }
+      return String(row.__clientRowIndex);
+    }
+
+    function populateStatusFilter() {
+      const statuses = Array.from(new Set(state.rows.map(row => stringifyValue(row[state.statusKey]).trim()).filter(Boolean))).sort();
+      if (!els.statusFilter) return;
+      els.statusFilter.innerHTML = "";
+      const allOption = document.createElement("option");
+      allOption.value = "";
+      allOption.textContent = t("allAssets");
+      els.statusFilter.appendChild(allOption);
+      statuses.forEach(status => {
+        const option = document.createElement("option");
+        option.value = status;
+        option.textContent = translateStatus(status);
+        els.statusFilter.appendChild(option);
+      });
+      if (state.statusFilter) els.statusFilter.value = state.statusFilter;
+    }
+
+    function applyFilters() {
+      state.filteredRows = state.rows.filter(row => {
+        const matchesText = !state.query || matchesSearchQuery(row, state.query, state.searchMode);
+        const matchesStatus = !state.statusFilter || stringifyValue(row[state.statusKey]) === state.statusFilter;
+        return matchesText && matchesStatus;
+      });
+      render();
+    }
+
+    function classifySearchInput(query) {
+      if (/^\d+(\.\d+)?$/.test(query)) return "numeric";
+      if (/^[a-z]+$/.test(query)) return "alpha";
+      return "mixed";
+    }
+
+    function matchesSearchQuery(row, query, mode) {
+      if (mode === "numeric") {
+        return getNumericSearchFields(row).some(item => item.value.includes(query));
+      }
+      if (mode === "alpha") {
+        return getAlphaSearchFields(row).some(item => item.value.includes(query));
+      }
+      return Object.entries(row).some(([key, value]) =>
+        !key.startsWith("__") && stringifyValue(value).toLowerCase().includes(query)
+      );
+    }
+
+    function getNumericSearchFields(row) {
+      const rowId = findRowId(row);
+      const dimensions = [row.frontsize, row["Front Size"], row.depthsize, row["Depth Size"]];
+      const area = [row.plotarea, row["Plot Area"], row.area];
+      const price = [row.ratepersqunit, row["Rate (per sq unit)"], row["Rate Per Sq.Unit"], row.rate, row.totalamount, row["Total Amount"], row.amount];
+      return [
+        { group: "plot", label: `Plot #${rowId}`, value: normalizeSearchNumber(rowId), rowId },
+        ...dimensions.map(value => ({ group: "area", label: `${t("dimensions")}: ${stringifyValue(value)} Ft`, value: normalizeSearchNumber(value), rowId })),
+        ...area.map(value => ({ group: "area", label: `${t("area")}: ${stringifyValue(value)} Sq.Ft`, value: normalizeSearchNumber(value), rowId })),
+        ...price.map(value => ({ group: "price", label: `${t("rate")}/${t("total")}: ${stringifyValue(value)}`, value: normalizeSearchNumber(value), rowId }))
+      ].filter(item => item.value);
+    }
+
+    function getAlphaSearchFields(row) {
+      const rowId = findRowId(row);
+      const plotType = stringifyValue(row.plottype ?? row["Plot Type"]);
+      const status = stringifyValue(row[state.statusKey]);
+      return [
+        { group: "type", label: plotType, value: plotType.toLowerCase(), searchValue: plotType.toLowerCase(), rowId },
+        { group: "status", label: translateStatus(status), value: `${status} ${translateStatus(status)}`.toLowerCase(), searchValue: status.toLowerCase(), rowId }
+      ].filter(item => item.value.trim());
+    }
+
+    function normalizeSearchNumber(value) {
+      return stringifyValue(value).replace(/,/g, "").toLowerCase();
+    }
+
+    function renderSearchSuggestions() {
+      const query = state.query;
+      if (!query || !els.searchSuggestions) {
+        hideSearchSuggestions();
+        return;
+      }
+
+      const grouped = buildSearchSuggestions(query, state.searchMode);
+      els.searchSuggestions.innerHTML = "";
+
+      if (!grouped.some(group => group.items.length)) {
+        const empty = document.createElement("p");
+        empty.className = "px-3 py-2 text-sm font-bold text-slate-500";
+        empty.textContent = t("noSuggestions");
+        els.searchSuggestions.appendChild(empty);
+        els.searchSuggestions.classList.remove("hidden");
+        return;
+      }
+
+      grouped.forEach(group => {
+        if (!group.items.length) return;
+        const section = document.createElement("section");
+        section.className = "py-1";
+        const title = document.createElement("p");
+        title.className = "px-3 py-1 text-[11px] font-black uppercase tracking-wide text-slate-500";
+        title.textContent = group.title;
+        section.appendChild(title);
+
+        group.items.forEach(item => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left text-sm font-bold transition hover:bg-emerald-50";
+          button.innerHTML = `<span class="min-w-0 truncate">${escapeHTML(item.label)}</span><span class="shrink-0 text-xs font-black text-slate-400">#${escapeHTML(item.rowId)}</span>`;
+          button.addEventListener("mousedown", event => event.preventDefault());
+          button.addEventListener("click", () => applySearchSuggestion(item));
+          section.appendChild(button);
+        });
+        els.searchSuggestions.appendChild(section);
+      });
+
+      els.searchSuggestions.classList.remove("hidden");
+    }
+
+    function buildSearchSuggestions(query, mode) {
+      if (mode === "numeric") {
+        const groups = [
+          { key: "plot", title: t("searchPlotNumbers"), items: [] },
+          { key: "area", title: t("searchAreaDimensions"), items: [] },
+          { key: "price", title: t("searchPrice"), items: [] }
+        ];
+        state.rows.forEach(row => {
+          getNumericSearchFields(row).forEach(item => {
+            if (!item.value.includes(query)) return;
+            if (query.length <= 3 && item.group !== "plot" && item.group !== "area") return;
+            if (query.length < 3 && item.group === "price") return;
+            groups.find(group => group.key === item.group)?.items.push(item);
+          });
+        });
+        return groups.map(group => ({ ...group, items: uniqueSuggestions(group.items).slice(0, 8) }));
+      }
+
+      if (mode === "alpha") {
+        const groups = [
+          { key: "type", title: t("searchPlotType"), items: [] },
+          { key: "status", title: t("searchStatus"), items: [] }
+        ];
+        state.rows.forEach(row => {
+          getAlphaSearchFields(row).forEach(item => {
+            if (item.value.includes(query)) groups.find(group => group.key === item.group)?.items.push(item);
+          });
+        });
+        return groups.map(group => ({ ...group, items: uniqueSuggestions(group.items).slice(0, 8) }));
+      }
+
+      return [
+        {
+          key: "all",
+          title: t("searchMatches"),
+          items: state.rows
+            .filter(row => matchesSearchQuery(row, query, "mixed"))
+            .slice(0, 10)
+            .map(row => ({ label: `Plot #${findRowId(row)} - ${stringifyValue(row.plottype ?? row["Plot Type"] ?? row[state.statusKey])}`, rowId: findRowId(row), value: query }))
+        }
+      ];
+    }
+
+    function uniqueSuggestions(items) {
+      const seen = new Set();
+      return items.filter(item => {
+        const key = `${item.group}-${item.label}-${item.rowId}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    function applySearchSuggestion(item) {
+      state.query = item.searchValue || item.value || "";
+      els.searchInput.value = item.searchValue || item.value || item.label;
+      state.searchMode = classifySearchInput(state.query);
+      hideSearchSuggestions();
+      applyFilters();
+      if (item.rowId && item.group === "plot") showPlotDetailForId(item.rowId);
+    }
+
+    function hideSearchSuggestions() {
+      els.searchSuggestions?.classList.add("hidden");
+    }
+
+    function render() {
+      renderMetrics();
+      renderSelectedPanel();
+      renderMap();
+    }
+
+    function renderMetrics() {
+      const available = state.rows.filter(row => normalizeStatus(row[state.statusKey]) === "available").length;
+      const sold = state.rows.filter(row => normalizeStatus(row[state.statusKey]) === "sold").length;
+      const inTalk = state.rows.filter(row => normalizeStatus(row[state.statusKey]) === "in-talk").length;
+      els.totalCount.textContent = state.rows.length;
+      els.availableCount.textContent = available;
+      els.soldCount.textContent = sold;
+      els.inTalkCount.textContent = inTalk;
+      els.desktopTotalCount.textContent = state.rows.length;
+      els.desktopAvailableCount.textContent = available;
+      els.desktopSoldCount.textContent = sold;
+      els.desktopInTalkCount.textContent = inTalk;
+    }
+
+    function initializeMap() {
+      if (state.mapReady) return;
+
+      try {
+        state.mapDoc = document;
+
+        const svg = state.mapDoc.getElementById("mapSvg");
+        const plotLayer = state.mapDoc.getElementById("Plots-Layer");
+        if (svg) {
+          svg.style.display = "block";
+          svg.style.overflow = "visible";
+        }
+        if (plotLayer) plotLayer.style.opacity = "1";
+
+        preparePlotShapes();
+        state.mapReady = true;
+        hideMapLoader();
+        renderMap();
+        requestAnimationFrame(() => setZoom(1));
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        if (state.mapReady) hideMapLoader();
+      }
+    }
+
+    function hideMapLoader() {
+      els.mapLoading.classList.add("opacity-0", "pointer-events-none");
+      window.setTimeout(() => els.mapLoading.classList.add("hidden"), 320);
+    }
+
+    function preparePlotShapes() {
+      const style = state.mapDoc.createElementNS(SVG_NS, "style");
+      style.textContent = `
+        #Plots-Layer > [id^="plot-"] {
+          cursor: pointer;
+          stroke: rgba(255,255,255,0.82) !important;
+          stroke-width: 1.05px !important;
+          vector-effect: non-scaling-stroke;
+          transition: fill 160ms ease, opacity 160ms ease, stroke 160ms ease;
+          pointer-events: auto !important;
+          touch-action: manipulation;
+          user-select: none;
+          -webkit-user-select: none;
+        }
+        #Plots-Layer > [id^="plot-"] * {
+          stroke: rgba(255,255,255,0.82) !important;
+          stroke-width: 1px !important;
+          vector-effect: non-scaling-stroke;
+        }
+        #Plots-Layer > [id^="plot-"]:hover {
+          opacity: 1 !important;
+          stroke: #0000FF !important;
+          stroke-width: 1px !important;
+          filter: drop-shadow(0 0 6px rgba(15,23,42,0.28));
+        }
+        .plot-selected {
+          stroke: #ffffff !important;
+          stroke-width: 2.5px !important;
+          opacity: 1 !important;
+          filter: drop-shadow(0 0 10px rgba(250,204,21,0.88));
+        }
+        .plot-search-match {
+          fill: #ec4899 !important;
+          fill-opacity: 0.82 !important;
+          stroke: #be185d !important;
+          stroke-width: 2.4px !important;
+          opacity: 1 !important;
+          filter: drop-shadow(0 0 10px rgba(236,72,153,0.75));
+        }
+        .plot-label {
+          pointer-events: none;
+          fill: #ffffff;
+          stroke: rgba(15,23,42,0.66);
+          stroke-width: 1px;
+          paint-order: stroke;
+          font: 950 40px system-ui, -apple-system, Segoe UI, sans-serif;
+          text-anchor: middle;
+          dominant-baseline: central;
+          opacity: 1;
+        }
+      `;
+      state.mapDoc.getElementById("mapSvg")?.prepend(style);
+
+      getPlotShapes().forEach(shape => {
+        const plotId = getPlotIdFromElement(shape);
+        shape.addEventListener("click", event => {
+          event.preventDefault();
+          showPlotDetailForId(plotId);
+        });
+        shape.setAttribute("tabindex", "0");
+        shape.setAttribute("role", "button");
+        shape.setAttribute("aria-label", `Plot ${plotId}`);
+        shape.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            showPlotDetailForId(plotId);
+          }
+        });
+      });
+
+      addPlotLabels();
+    }
+
+    function addPlotLabels() {
+      const svg = state.mapDoc.getElementById("mapSvg");
+      let labelLayer = state.mapDoc.getElementById("map-labels");
+      if (!svg || labelLayer) return;
+
+      labelLayer = state.mapDoc.createElementNS(SVG_NS, "g");
+      labelLayer.id = "map-labels";
+      svg.appendChild(labelLayer);
+
+      getPlotShapes().forEach(shape => {
+        const plotId = getPlotIdFromElement(shape);
+        if (shape.id.includes("_")) return;
+        try {
+          const label = state.mapDoc.createElementNS(SVG_NS, "text");
+          const box = shape.getBBox();
+          label.classList.add("plot-label");
+          label.dataset.plotId = plotId;
+          label.setAttribute("x", box.x + box.width / 2);
+          label.setAttribute("y", box.y + box.height / 2);
+          label.style.fontSize = `${getLabelFontSize(box)}px`;
+          if (shape.getAttribute("transform")) {
+            label.setAttribute("transform", shape.getAttribute("transform"));
+          }
+          label.textContent = plotId;
+          labelLayer.appendChild(label);
+        } catch (error) {
+          console.warn("Unable to label", shape.id, error);
+        }
+      });
+    }
+
+    function renderMap() {
+      if (!state.mapReady || !state.mapDoc) return;
+
+      const visibleIds = new Set(state.filteredRows.map(findRowId));
+      const searchMatchIds = new Set(state.query ? state.filteredRows.map(findRowId) : []);
+      getPlotShapes().forEach(shape => {
+        const plotId = getPlotIdFromElement(shape);
+        const row = getRowById(plotId);
+        const visible = visibleIds.has(plotId);
+        const selected = state.selectedId === plotId;
+        const searchMatch = searchMatchIds.has(plotId);
+        shape.style.fill = searchMatch ? "#ec4899" : getMapFill(row?.[state.statusKey]);
+        shape.style.fillOpacity = searchMatch ? "0.82" : (visible ? getMapFillOpacity(row?.[state.statusKey]) : "0.06");
+        shape.style.opacity = visible ? "1" : "0.22";
+        shape.classList.toggle("plot-selected", selected);
+        shape.classList.toggle("plot-search-match", searchMatch);
+      });
+
+      const labelLayer = state.mapDoc.getElementById("map-labels");
+      if (labelLayer) {
+        labelLayer.querySelectorAll("text").forEach(label => {
+          const plotId = label.dataset.plotId || label.textContent.trim();
+          const visible = visibleIds.has(plotId);
+          const row = getRowById(plotId);
+          const colors = getLabelColors(row?.[state.statusKey]);
+          label.style.fill = colors.fill;
+          label.style.stroke = colors.stroke;
+          label.style.opacity = visible ? "1" : "0.24";
+        });
+      }
+    }
+
+    function getPlotShapes() {
+      return Array.from(state.mapDoc.querySelectorAll('#Plots-Layer > [id^="plot-"]'));
+    }
+
+    function getLabelFontSize(box) {
+      const shortestSide = Math.max(10, Math.min(box.width, box.height));
+      return Math.max(5.5, Math.min(10, shortestSide * 0.26));
+    }
+
+    function getPlotIdFromElement(element) {
+      return String(element.id || "").replace(/^plot-/, "").replace(/_.+$/, "");
+    }
+
+    function getMapFill(status) {
+      switch (normalizeStatus(status)) {
+        case "sold": return "#ef4444";
+        case "in-talk": return "#f59e0b";
+        case "available": return "#FFFFFF";
+        case "pending": return "#a855f7";
+        case "in-progress": return "#6366f1";
+        default: return "#64748b";
+      }
+    }
+
+    function getMapFillOpacity(status) {
+      switch (normalizeStatus(status)) {
+        case "sold": return "0.64";
+        case "in-talk": return "0.58";
+        case "available": return "0";
+        default: return "0.42";
+      }
+    }
+
+    function getLabelColors(status) {
+      switch (normalizeStatus(status)) {
+        case "sold":
+        case "available":
+          return { fill: "#ffffff", stroke: "rgba(15, 23, 42, 0.78)" };
+        case "in-talk":
+          return { fill: "#111827", stroke: "rgba(255, 255, 255, 0.86)" };
+        case "pending":
+        case "in-progress":
+          return { fill: "#ffffff", stroke: "rgba(15, 23, 42, 0.78)" };
+        default:
+          return { fill: "#ffffff", stroke: "rgba(15, 23, 42, 0.72)" };
+      }
+    }
+
+    function renderSelectedPanel() {
+      const row = state.selectedId ? getRowById(state.selectedId) : null;
+      els.selectedDetails.innerHTML = "";
+
+      if (!row) {
+        els.selectedTitle.textContent = t("selectPlot");
+        els.selectedBadge.textContent = t("none");
+        els.selectedBadge.className = "rounded-lg bg-slate-100 px-3 py-2 text-xs font-black text-slate-600";
+        els.selectedDetails.innerHTML = `<p class="rounded-lg bg-slate-50 p-4 text-sm font-semibold text-slate-500">${escapeHTML(t("introHelp"))}</p>`;
+        return;
+      }
+
+      const status = stringifyValue(row[state.statusKey]) || "Pending";
+      els.selectedTitle.textContent = `Plot #${findRowId(row)}`;
+      els.selectedBadge.textContent = translateStatus(status);
+      els.selectedBadge.className = `rounded-lg px-3 py-2 text-xs font-black ${getStatusClasses(status)}`;
+
+      const important = [
+        [t("plotType"), row.plottype ?? row["Plot Type"]],
+        [t("dimensions"), formatDimensions(row)],
+        [t("area"), formatArea(row)],
+        [t("rate"), formatMoney(row.ratepersqunit ?? row["Rate Per Sq.Unit"] ?? row.rate)],
+        [t("total"), formatMoney(row.totalamount ?? row["Total Amount"] ?? row.amount)]
+      ];
+
+      important.forEach(([label, value]) => {
+        const item = document.createElement("div");
+        item.className = "rounded-lg bg-slate-50 p-3";
+        item.innerHTML = `<p class="text-xs font-black uppercase tracking-wide text-slate-500">${escapeHTML(label)}</p><p class="mt-1 break-words text-base font-black text-slate-900">${escapeHTML(value || "-")}</p>`;
+        els.selectedDetails.appendChild(item);
+      });
+
+      const statusWrap = document.createElement("div");
+      statusWrap.className = "rounded-lg border border-slate-200 p-3";
+      statusWrap.innerHTML = `<p class="mb-2 text-xs font-black uppercase tracking-wide text-slate-500">${escapeHTML(t("status"))}</p>`;
+      statusWrap.appendChild(renderStatusControl(row));
+      els.selectedDetails.appendChild(statusWrap);
+    }
+
+    function getPlotDetailItems(row) {
+      return [
+        [t("plotType"), row.plottype ?? row["Plot Type"]],
+        [t("dimensions"), formatDimensions(row)],
+        [t("area"), formatArea(row)],
+        [t("rate"), formatMoney(row.ratepersqunit ?? row["Rate (per sq unit)"] ?? row.rate)],
+        [t("total"), formatMoney(row.totalamount ?? row["Total Amount"] ?? row.amount)]
+      ];
+    }
+
+    function openPlotModal(row) {
+      const status = stringifyValue(row[state.statusKey]) || "Pending";
+      const rowId = findRowId(row);
+      els.modalTitle.textContent = `Plot #${rowId}`;
+      els.modalBadge.textContent = translateStatus(status);
+      els.modalBadge.className = `mb-4 inline-flex rounded-lg px-3 py-2 text-xs font-black ${getStatusClasses(status)}`;
+      els.modalDetails.innerHTML = "";
+
+      getPlotDetailItems(row).forEach(([label, value]) => {
+        const item = document.createElement("div");
+        item.className = "rounded-lg bg-slate-50 p-3";
+        item.innerHTML = `<p class="text-xs font-black uppercase tracking-wide text-slate-500">${escapeHTML(label)}</p><p class="mt-1 break-words text-base font-black text-slate-900">${escapeHTML(value || "-")}</p>`;
+        els.modalDetails.appendChild(item);
+      });
+
+      // Show interested people count for "In Talk" plots
+      if (normalizeStatus(status) === "in-talk") {
+        const interestedCount = state.interestedCountMap[rowId] || 0;
+        const interestedItem = document.createElement("div");
+        interestedItem.className = "rounded-lg bg-amber-50 p-3 border border-amber-100";
+        interestedItem.innerHTML = `<p class="text-xs font-black uppercase tracking-wide text-amber-600">${escapeHTML(t("interestedPeople"))}</p><p class="mt-1 text-base font-black text-amber-900">${interestedCount} ${escapeHTML(t("people"))}</p>`;
+        els.modalDetails.appendChild(interestedItem);
+
+        // Show admin control for interested count
+        if (state.isAdmin) {
+          const adminItem = document.createElement("div");
+          adminItem.className = "rounded-lg border border-slate-200 p-3";
+          adminItem.innerHTML = `<p class="mb-2 text-xs font-black uppercase tracking-wide text-slate-500">${escapeHTML(t("updateInterestedCount"))}</p>`;
+          const controlDiv = document.createElement("div");
+          controlDiv.className = "flex items-center gap-2";
+          const input = document.createElement("input");
+          input.type = "number";
+          input.min = "0";
+          input.value = interestedCount;
+          input.className = "flex-1 h-11 rounded-lg border border-slate-300 px-3 text-sm font-bold text-slate-900 outline-none focus:border-leaf focus:ring-4 focus:ring-emerald-100";
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "h-11 rounded-lg bg-forest px-4 text-sm font-black text-white transition hover:bg-leaf";
+          btn.textContent = t("save");
+          btn.addEventListener("click", () => updateInterestedCount(rowId, input.value));
+          controlDiv.appendChild(input);
+          controlDiv.appendChild(btn);
+          adminItem.appendChild(controlDiv);
+          els.modalDetails.appendChild(adminItem);
+        }
+      }
+
+      const statusWrap = document.createElement("div");
+      statusWrap.className = "rounded-lg border border-slate-200 p-3";
+      statusWrap.innerHTML = `<p class="mb-2 text-xs font-black uppercase tracking-wide text-slate-500">${escapeHTML(t("status"))}</p>`;
+      statusWrap.appendChild(renderStatusControl(row));
+      els.modalDetails.appendChild(statusWrap);
+      els.plotModal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    }
+
+    async function updateInterestedCount(plotId, count) {
+      const newCount = Math.max(0, parseInt(count, 10) || 0);
+      state.interestedCountMap[plotId] = newCount;
+
+      try {
+        await saveInterestedCount(plotId, newCount);
+        showToast(t("interestedUpdated"), "success");
+        const row = getRowById(plotId);
+        if (row) openPlotModal(row);
+      } catch (error) {
+        console.error(error);
+        showToast(t("interestedError"), "error");
+      }
+    }
+
+    async function saveInterestedCount(plotId, count) {
+      await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          type: "updateInterestedCount",
+          plotId: plotId,
+          interestedCount: count
+        })
+      });
+    }
+
+    function closePlotModal() {
+      els.plotModal.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    function renderStatusControl(row) {
+      const currentStatus = stringifyValue(row[state.statusKey]) || "Pending";
+      const rowId = findRowId(row);
+
+      if (!state.isAdmin) {
+        const badge = document.createElement("span");
+        badge.className = `inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-black ${getStatusClasses(currentStatus)}`;
+        badge.textContent = translateStatus(currentStatus);
+        return badge;
+      }
+
+      const wrap = document.createElement("div");
+      wrap.className = "flex min-w-[10rem] items-center gap-2";
+      const select = document.createElement("select");
+      select.className = "status-select min-h-12 w-full appearance-none rounded-lg border border-slate-300 bg-white px-3 py-3 pr-9 text-base font-black text-slate-900 outline-none transition focus:border-leaf focus:ring-4 focus:ring-emerald-100 disabled:cursor-wait disabled:opacity-70 lg:min-h-10 lg:py-2 lg:text-sm";
+      select.disabled = state.updatingIds.has(rowId);
+      select.setAttribute("aria-label", `${t("status")} Plot ${rowId}`);
+
+      const options = currentStatus && !STATUS_OPTIONS.includes(currentStatus) ? [currentStatus, ...STATUS_OPTIONS] : STATUS_OPTIONS;
+      options.forEach(optionValue => {
+        const option = document.createElement("option");
+        option.value = optionValue;
+        option.textContent = translateStatus(optionValue);
+        option.selected = currentStatus === optionValue;
+        select.appendChild(option);
+      });
+      select.addEventListener("change", event => updateStatus(row, event.target.value, event.target));
+      wrap.appendChild(select);
+
+      if (state.updatingIds.has(rowId)) {
+        const spinner = document.createElement("span");
+        spinner.className = "loader !h-5 !w-5 !border-2";
+        spinner.setAttribute("aria-label", t("updatingStatus"));
+        wrap.appendChild(spinner);
+      }
+      return wrap;
+    }
+
+    async function updateStatus(row, newStatus, selectEl) {
+      const rowId = findRowId(row);
+      const previousStatus = stringifyValue(row[state.statusKey]);
+      if (newStatus === previousStatus) return;
+
+      state.updatingIds.add(rowId);
+      render();
+      const pendingToast = showToast(t("updatingStatus"), "loading", false);
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ rowId, id: rowId, status: newStatus, statusKey: state.statusKey, row })
+        });
+        if (!response.ok) throw new Error(`Update failed with status ${response.status}`);
+
+        row[state.statusKey] = newStatus;
+        const becameInTalk = normalizeStatus(newStatus) === "in-talk" && normalizeStatus(previousStatus) !== "in-talk";
+        if (becameInTalk && (Number(state.interestedCountMap[rowId]) || 0) < 1) {
+          state.interestedCountMap[rowId] = 1;
+          await saveInterestedCount(rowId, 1);
+        }
+        dismissToast(pendingToast);
+        showToast(t("statusUpdated"), "success");
+        if (!els.plotModal.classList.contains("hidden")) {
+          openPlotModal(row);
+        }
+      } catch (error) {
+        row[state.statusKey] = previousStatus;
+        if (selectEl) selectEl.value = previousStatus;
+        dismissToast(pendingToast);
+        showToast(t("statusError"), "error");
+        console.error(error);
+      } finally {
+        state.updatingIds.delete(rowId);
+        applyFilters();
+      }
+    }
+
+    function openEnquiryModal(plotId) {
+      els.enquiryPlotNumber.textContent = plotId;
+      updateEnquiryTitle(plotId);
+      els.enquiryForm.reset();
+      els.enquiryModal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+      els.enquiryName.focus();
+    }
+
+    function closeEnquiryModal() {
+      els.enquiryModal.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    async function handleEnquirySubmit(event) {
+      event.preventDefault();
+      const plotId = els.enquiryPlotNumber.textContent;
+      const name = els.enquiryName.value.trim();
+      const address = els.enquiryAddress.value.trim();
+      const mobile = els.enquiryMobile.value.trim();
+
+      if (!name || !address || !mobile) {
+        showToast(t("requiredFields"), "error");
+        return;
+      }
+
+      const submitBtn = els.submitEnquiryBtn;
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="mini-loader !h-4 !w-4 !border-2"></span>';
+
+      try {
+        const payload = JSON.stringify({
+          type: "enquiry",
+          plotId: plotId,
+          name: name,
+          address: address,
+          mobile: mobile,
+          timestamp: new Date().toISOString()
+        });
+
+        console.log("Sending enquiry:", payload);
+
+        const response = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: payload
+        });
+
+        console.log("Response status:", response.status);
+        const responseText = await response.text();
+        console.log("Response body:", responseText);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${responseText}`);
+        }
+
+        state.enquirySubmittedThisSession = true;
+        closeEnquiryModal();
+        showToast(t("enquirySuccess"), "success");
+        
+        // Show plot details after enquiry submission
+        const row = getRowById(plotId);
+        if (row) {
+          setTimeout(() => openPlotModal(row), 500);
+        }
+      } catch (error) {
+        console.error("Enquiry submission error:", error);
+        showToast(`Error: ${error.message}`, "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    }
+
+    function showPlotDetailForId(plotId) {
+      const normalized = String(plotId || "").trim();
+      const row = getRowById(normalized);
+      if (!row) {
+        showToast(t("plotNotFound", { plot: normalized }), "error");
+        return;
+      }
+      state.selectedId = normalized;
+      if (els.plotFinder) els.plotFinder.value = normalized;
+      render();
+      centerMapPlot(normalized);
+
+      // Show enquiry form if user is not admin and hasn't submitted enquiry this session
+      if (!state.isAdmin && !state.enquirySubmittedThisSession) {
+        openEnquiryModal(normalized);
+      } else {
+        openPlotModal(row);
+      }
+    }
+
+    function selectPlot(plotId) {
+      const normalized = String(plotId || "").trim();
+      const row = getRowById(normalized);
+      if (!row) {
+        showToast(t("plotNotFound", { plot: normalized }), "error");
+        return;
+      }
+      state.selectedId = normalized;
+      if (els.plotFinder) els.plotFinder.value = normalized;
+      render();
+      centerMapPlot(normalized);
+    }
+
+    function centerMapPlot(plotId) {
+      if (!state.mapReady || !state.mapDoc) return;
+      const shape = state.mapDoc.getElementById(`plot-${plotId}`);
+      if (!shape) return;
+      try {
+        const box = shape.getBBox();
+        const svg = state.mapDoc.getElementById("mapSvg");
+        const mapStage = document.getElementById("mapStage");
+        const scale = svg.getBoundingClientRect().height / (Number(svg.getAttribute("height")) || 1364);
+        const targetLeft = (box.x + box.width / 2) * scale - mapStage.clientWidth / 2;
+        const targetTop = (box.y + box.height / 2) * scale - mapStage.clientHeight / 2;
+        mapStage.scrollTo({
+          left: Math.max(0, targetLeft),
+          top: Math.max(0, targetTop),
+          behavior: "smooth"
+        });
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+
+    function clearSelection() {
+      state.selectedId = "";
+      if (els.plotFinder) els.plotFinder.value = "";
+      state.query = "";
+      state.searchMode = "mixed";
+      state.statusFilter = "";
+      els.searchInput.value = "";
+      hideSearchSuggestions();
+      if (els.statusFilter) els.statusFilter.value = "";
+      closePlotModal();
+      resetMapViewBox();
+      applyFilters();
+    }
+
+    function resetMapViewBox() {
+      const svg = state.mapDoc?.getElementById("mapSvg");
+      if (svg) svg.setAttribute("viewBox", "0 0 1500 1364");
+      setZoom(1);
+    }
+
+    function handlePlotFinder(event) {
+      const value = event.target.value.trim();
+      if (!value) {
+        state.selectedId = "";
+        render();
+        return;
+      }
+      const row = getRowById(value);
+      if (row) selectPlot(value);
+    }
+
+    function handleAdminToggle(event) {
+      state.isAdmin = event.target.checked;
+      if (event.target.checked) {
+        const password = window.prompt(t("adminPassword"));
+        if (password !== "7024") {
+          event.target.checked = false;
+          state.isAdmin = false;
+          els.modeLabel.textContent = t("locked");
+          showToast(t("incorrectPassword"), "error");
+          render();
+          return;
+        }
+      }
+      state.isAdmin = event.target.checked;
+      els.modeLabel.textContent = state.isAdmin ? t("unlocked") : t("locked");
+      render();
+    }
+
+    function setZoom(value) {
+      const mapStage = document.getElementById("mapStage");
+      const previousZoom = state.zoom;
+      const previousScrollTop = mapStage.scrollTop;
+      const previousScrollLeft = mapStage.scrollLeft;
+      state.zoom = Math.max(0.62, Math.min(3, value));
+      const svg = state.mapDoc?.getElementById("mapSvg");
+      if (svg) {
+        const stageStyle = window.getComputedStyle(mapStage);
+        const verticalPadding = parseFloat(stageStyle.paddingTop) + parseFloat(stageStyle.paddingBottom);
+        const fittedHeight = Math.max(260, mapStage.clientHeight - verticalPadding);
+        svg.style.height = `${fittedHeight * state.zoom}px`;
+      }
+
+      requestAnimationFrame(() => {
+        const ratio = state.zoom / previousZoom;
+        mapStage.scrollTop = previousScrollTop * ratio;
+        mapStage.scrollLeft = previousScrollLeft * ratio;
+      });
+    }
+
+    function setupPinchZoom() {
+      const getDistance = touches => {
+        const [first, second] = touches;
+        return Math.hypot(first.clientX - second.clientX, first.clientY - second.clientY);
+      };
+
+      const startPinch = event => {
+        if (event.touches.length !== 2) return;
+        state.pinchStartDistance = getDistance(event.touches);
+        state.pinchStartZoom = state.zoom;
+      };
+
+      const movePinch = event => {
+        if (event.touches.length !== 2 || !state.pinchStartDistance) return;
+        event.preventDefault();
+        const nextZoom = state.pinchStartZoom * (getDistance(event.touches) / state.pinchStartDistance);
+        setZoom(nextZoom);
+      };
+
+      const endPinch = () => {
+        state.pinchStartDistance = 0;
+      };
+
+      const mapStage = document.getElementById("mapStage");
+      mapStage.addEventListener("touchstart", startPinch, { passive: true });
+      mapStage.addEventListener("touchmove", movePinch, { passive: false });
+      mapStage.addEventListener("touchend", endPinch);
+      mapStage.addEventListener("touchcancel", endPinch);
+    }
+
+    function getRowById(id) {
+      return state.rows.find(row => findRowId(row) === String(id));
+    }
+
+    function formatCell(row, column) {
+      if (column === "plotarea") return formatArea(row);
+      if (column === "frontsize" || column === "depthsize") return `${stringifyValue(row[column])} ft`;
+      if (column === "ratepersqunit" || column === "totalamount") return formatMoney(row[column]);
+      return stringifyValue(row[column]);
+    }
+
+    function formatDimensions(row) {
+      const front = row.frontsize ?? row["Front Size"];
+      const depth = row.depthsize ?? row["Depth Size"];
+      if (!front && !depth) return "-";
+      return `${front || "-"} x ${depth || "-"} Ft`;
+    }
+
+    function formatArea(row) {
+      const area = row.plotarea ?? row["Plot Area"] ?? row.area;
+      return area ? `${Number(area).toLocaleString("en-IN", { maximumFractionDigits: 2 })} Sq.Ft` : "-";
+    }
+
+    function formatMoney(value) {
+      if (value === null || value === undefined || value === "") return "-";
+      const number = Number(value);
+      if (Number.isNaN(number)) return stringifyValue(value);
+      return number.toLocaleString("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+    }
+
+    function normalizeStatus(status) {
+      return stringifyValue(status).trim().toLowerCase().replace(/\s+/g, "-");
+    }
+
+    function stringifyValue(value) {
+      if (value === null || value === undefined) return "";
+      if (typeof value === "object") return JSON.stringify(value);
+      return String(value);
+    }
+
+    function prettifyColumn(column) {
+      return String(column).replace(/[_-]+/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2").trim();
+    }
+
+    function getStatusClasses(status) {
+      switch (normalizeStatus(status)) {
+        case "available": return "bg-sky-50 text-sky-700 ring-1 ring-sky-200";
+        case "in-talk": return "bg-amber-50 text-amber-800 ring-1 ring-amber-200";
+        case "sold": return "bg-rose-50 text-rose-700 ring-1 ring-rose-200";
+        case "in-progress": return "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200";
+        default: return "bg-slate-100 text-slate-700 ring-1 ring-slate-200";
+      }
+    }
+
+    function setLoading(isLoading) {
+      state.isLoading = isLoading;
+      if (isLoading && !state.mapReady) {
+        els.mapLoading.classList.remove("hidden", "opacity-0", "pointer-events-none");
+      } else if (!isLoading) {
+        hideMapLoader();
+      }
+      els.refreshBtn.disabled = isLoading;
+      els.refreshBtn.classList.toggle("opacity-60", isLoading);
+    }
+
+    function showError(message) {
+      els.errorMessage.textContent = `${message}. ${t("loadErrorSuffix")}`;
+      els.errorState.classList.remove("hidden");
+    }
+
+    function hideError() {
+      els.errorState.classList.add("hidden");
+    }
+
+    function showToast(message, type = "info", autoDismiss = true) {
+      const toast = document.createElement("div");
+      const typeClasses = {
+        info: "border-slate-200 bg-white text-slate-900",
+        loading: "border-leaf bg-leaf text-white",
+        success: "border-emerald-200 bg-emerald-600 text-white",
+        error: "border-red-200 bg-red-600 text-white"
+      };
+      toast.className = `flex items-center gap-3 rounded-lg border px-4 py-3 text-sm font-black shadow-soft ${typeClasses[type] || typeClasses.info}`;
+      if (type === "loading") {
+        const spinner = document.createElement("span");
+        spinner.className = "mini-loader";
+        toast.appendChild(spinner);
+      }
+      const text = document.createElement("span");
+      text.textContent = message;
+      toast.appendChild(text);
+      els.toastRegion.appendChild(toast);
+      if (autoDismiss) window.setTimeout(() => dismissToast(toast), 3200);
+      return toast;
+    }
+
+    function dismissToast(toast) {
+      if (!toast || !toast.parentNode) return;
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(8px)";
+      toast.style.transition = "opacity 180ms ease, transform 180ms ease";
+      window.setTimeout(() => toast.remove(), 200);
+    }
+
+    function escapeHTML(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
