@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#16352b">
   <title>Anant Greens | Plotted Township, Bilaspur</title>
   <link rel="preload" as="image" href="assets/optimized/01.webp">
-  <link rel="preload" as="image" href="assets/brand/anant-greens-logo-transparent.png">
+  <link rel="preload" as="image" href="assets/brand/anant-greens-wordmark-white.png">
   <style>
     :root {
       --forest: #16352b;
@@ -194,6 +194,8 @@
     .btn.light:hover { background: white; }
     .btn.outline { color: var(--forest); background: transparent; border-color: var(--forest); }
     .btn.outline:hover { color: white; background: var(--forest); }
+    .section.forest .btn.outline { color: white; border-color: rgba(255,255,255,.42); }
+    .section.forest .btn.outline:hover { color: var(--forest); background: white; border-color: white; }
 
     .menu {
       display: none;
@@ -267,6 +269,16 @@
       color: var(--sage);
       font-style: italic;
       font-weight: 400;
+    }
+
+    .hero-logo-wordmark {
+      width: min(640px, 78vw);
+    }
+
+    .hero-logo-wordmark img {
+      width: 100%;
+      max-width: none;
+      filter: drop-shadow(0 18px 34px rgba(0,0,0,.22));
     }
 
     .hero-lower {
@@ -535,6 +547,51 @@
     .map-frame { height: 660px; background: #dfe3db; }
     .map-frame iframe { width: 100%; height: 100%; border: 0; }
 
+    .layout-teaser {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      min-height: 620px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.07);
+      overflow: hidden;
+    }
+
+    .layout-teaser-copy {
+      padding: clamp(28px, 5vw, 64px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .layout-teaser-copy h3 {
+      margin: 0;
+      color: white;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3rem, 6vw, 6rem);
+      font-weight: 400;
+      line-height: .9;
+    }
+
+    .layout-teaser-copy p {
+      max-width: 560px;
+      color: rgba(255,255,255,.7);
+      line-height: 1.7;
+    }
+
+    .layout-teaser-media {
+      position: relative;
+      min-height: 620px;
+      background: #0c2019;
+    }
+
+    .layout-teaser-media iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 620px;
+      border: 0;
+      display: block;
+    }
+
     .location {
       display: grid;
       grid-template-columns: .85fr 1.15fr;
@@ -566,7 +623,7 @@
     }
 
     .rera small { color: var(--accent); font-weight: 900; text-transform: uppercase; }
-    .rera strong { display: block; margin-top: 10px; overflow-wrap: anywhere; color: var(--forest); font-family: Georgia, "Times New Roman", serif; font-size: 2rem; font-weight: 400; }
+    .rera strong { display: block; margin-top: 10px; white-space: nowrap; color: var(--forest); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.45rem, 2.1vw, 1.9rem); font-weight: 400; }
     .rera p { color: var(--muted); font-size: .82rem; line-height: 1.55; }
 
     .approval-grid {
@@ -688,13 +745,15 @@
     }
     .footer-legal { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.16); line-height: 1.55; }
     .footer-legal a { color: var(--sage); }
+    .developer-credit { margin-top: 14px; color: rgba(255,255,255,.78); font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+    .developer-credit strong { color: var(--sage); }
 
     @media (max-width: 1020px) {
       .nav { grid-template-columns: auto auto; }
       .nav-links, .nav-cta { display: none; }
       .menu { display: inline-grid; place-items: center; justify-self: end; }
       .header.open .nav-links { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, 1fr); padding: 10px 0 20px; }
-      .vision, .experience-heading, .maps-head, .approval-head, .location, .contact { grid-template-columns: 1fr; }
+      .vision, .experience-heading, .maps-head, .approval-head, .location, .layout-teaser, .contact { grid-template-columns: 1fr; }
       .vision-main { width: calc(100% - 80px); }
       .experiences { grid-template-columns: 1fr 1fr; }
       .experience:nth-child(2) { margin-top: 0; }
@@ -710,6 +769,7 @@
       .logo small { display: none; }
       .hero-inner { padding-top: 128px; }
       h1 { font-size: clamp(4rem, 22vw, 6.5rem); }
+      .hero-logo-wordmark { width: min(100%, 520px); }
       .hero-lower { grid-template-columns: 1fr; gap: 24px; }
       .hero-actions { justify-content: flex-start; flex-direction: column; }
       .hero-actions .btn, .actions .btn { width: 100%; }
@@ -728,6 +788,7 @@
       .gallery-grid { grid-template-columns: 1fr; }
       .gallery-shot.tall, .gallery-shot.medium, .gallery-shot.short { height: 430px; }
       .map-frame { height: 560px; }
+      .layout-teaser, .layout-teaser-media { min-height: 520px; }
       .document { grid-template-columns: 1fr; }
       .status { width: fit-content; }
       .official { flex-direction: column; }
@@ -750,7 +811,7 @@
         <a href="#vision">Vision</a>
         <a href="#experience">Experience</a>
         <a href="#gallery">Gallery</a>
-        <a href="#maps">Maps</a>
+        <a href="map-layout.html">Map Layout</a>
         <a href="#approvals">Approvals</a>
       </nav>
       <a class="nav-cta" href="#contact">Book a visit</a>
@@ -762,12 +823,13 @@
     <section class="hero">
       <div class="hero-inner">
         <div class="container">
-          <p class="hero-kicker">Shri Anant Creation presents · Sarkanda, Bilaspur</p>
-          <h1>Anant <em>Greens</em></h1>
+          <div class="hero-logo-wordmark" aria-label="Anant Greens">
+            <img src="assets/brand/anant-greens-wordmark-white.png" alt="Anant Greens">
+          </div>
           <div class="hero-lower">
             <p class="hero-copy">A plotted township conceived around landscape, recreation and secure multi-generational living in Ashok Nagar, beside Patrakar Colony.</p>
             <div class="hero-actions">
-              <a class="btn light" href="#maps">Explore layout</a>
+              <a class="btn light" href="map-layout.html">Explore layout</a>
               <a class="btn" href="#contact">Schedule visit</a>
             </div>
           </div>
@@ -845,40 +907,22 @@
       </div>
     </section>
 
-    <section class="section forest" id="maps">
+    <section class="section forest" id="layout-preview">
       <div class="container">
         <div class="maps-head">
           <div><p class="eyebrow">Explore the project</p><h2 class="display">Layout and location.</h2></div>
-          <p class="intro">Use the interactive layout for orientation and the Google link for live directions.</p>
+          <p class="intro">Open the dedicated layout page for live plot availability, search, English/Hindi view, admin lock and location details.</p>
         </div>
-        <div class="map-shell">
-          <div class="tabs" role="tablist">
-            <button class="tab" id="layoutTab" type="button" role="tab" aria-selected="true" data-panel="layoutPanel">Interactive layout</button>
-            <button class="tab" id="locationTab" type="button" role="tab" aria-selected="false" data-panel="locationPanel">Site location</button>
+        <div class="layout-teaser">
+          <div class="layout-teaser-copy">
+            <p class="eyebrow">Live map</p>
+            <h3>See every plot before you visit.</h3>
+            <p>The layout page is part of this website and keeps the inventory tools separate, so map updates can be made without disturbing the main project page.</p>
+            <div class="actions"><a class="btn light" href="map-layout.html">Open map layout</a><a class="btn outline" href="https://share.google/izvbR6SzeVCJeks29" target="_blank" rel="noopener">Open Google Maps</a></div>
           </div>
-          <section class="map-panel active" id="layoutPanel" role="tabpanel">
-            <div class="map-frame"><iframe data-src="assets/map-layout/index.html#interactive-layout" title="Anant Greens interactive layout" loading="lazy"></iframe></div>
-            <div class="actions"><a class="btn light" href="assets/map-layout/index.html#interactive-layout" target="_blank" rel="noopener">Open full screen</a></div>
-          </section>
-          <section class="map-panel" id="locationPanel" role="tabpanel">
-            <div class="location">
-              <div class="location-copy">
-                <p class="eyebrow">Ashok Nagar, Sarkanda</p>
-                <h3>Connected to everyday Bilaspur.</h3>
-                <p>Project location stated as beside Patrakar Colony, with access to healthcare, education and institutional destinations.</p>
-                <ul class="landmarks">
-                  <li><span>SECL Headquarters</span><strong>Nearby</strong></li>
-                  <li><span>Apollo Hospital</span><strong>Nearby</strong></li>
-                  <li><span>Brilliant Public School</span><strong>Nearby</strong></li>
-                  <li><span>DLS College</span><strong>Nearby</strong></li>
-                  <li><span>Guru Ghasidas University</span><strong>Direct route</strong></li>
-                  <li><span>Patrakar Colony</span><strong>Beside site</strong></li>
-                </ul>
-                <div class="actions"><a class="btn" href="https://share.google/izvbR6SzeVCJeks29" target="_blank" rel="noopener">Open Google Maps</a></div>
-              </div>
-              <img src="assets/optimized/03.webp" alt="Anant Greens project visual" loading="lazy" decoding="async">
-            </div>
-          </section>
+          <div class="layout-teaser-media">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3696.2952858083527!2d82.1533330755184!3d22.114714479820478!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a280b0018eaebc7%3A0x8f68d30c85121e59!2sAnant%20Greens!5e0!3m2!1sen!2sin!4v1789162076812!5m2!1sen!2sin" title="Anant Greens location on Google Maps" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
         </div>
       </div>
     </section>
@@ -939,7 +983,7 @@
               <label class="full">Message<textarea name="message" placeholder="Plot, documents, pricing or site visit"></textarea></label>
             </div>
             <div class="actions"><button class="btn" type="submit">Submit enquiry</button><a class="btn outline" href="tel:+919183244419">Call now</a></div>
-            <p class="form-note">Connect a verified CRM or Google Sheets endpoint before using the form for live lead collection.</p>
+            <p class="form-note">Enquiries are saved to the project lead sheet once the Google Apps Script endpoint is added.</p>
           </form>
           <div class="actions"><a class="btn outline" href="https://www.instagram.com/shree_mangalam_estates/" target="_blank" rel="noopener">Instagram</a><a class="btn outline" href="https://www.facebook.com/shreemangalamestates/" target="_blank" rel="noopener">Facebook</a></div>
         </div>
@@ -949,8 +993,9 @@
 
   <footer>
     <div class="container">
-      <div class="footer-row"><span class="footer-brand"><img class="footer-logo" src="assets/brand/anant-greens-logo-transparent.png" alt="Anant Greens"></span><div class="footer-links"><a href="#vision">Vision</a><a href="#maps">Maps</a><a href="#approvals">Approvals</a><a href="Anant%20Greens%20(E-%20Brochure)%20(1).pdf" target="_blank" rel="noopener">Brochure</a></div></div>
+      <div class="footer-row"><span class="footer-brand"><img class="footer-logo" src="assets/brand/anant-greens-logo-transparent.png" alt="Anant Greens"></span><div class="footer-links"><a href="#vision">Vision</a><a href="map-layout.html">Map Layout</a><a href="#approvals">Approvals</a><a href="Anant%20Greens%20(E-%20Brochure)%20(1).pdf" target="_blank" rel="noopener">Brochure</a></div></div>
       <div class="footer-legal">CG-RERA number shown as stated in the brochure: PCGRERA270326002073. Verify the current record at <a href="https://rera.cgstate.gov.in/" target="_blank" rel="noopener">rera.cgstate.gov.in</a>. This website is informational and is not legal, title, investment or approval certification.</div>
+      <div class="developer-credit">Website by <strong>Kinetix Solutions</strong></div>
     </div>
   </footer>
 
@@ -963,30 +1008,35 @@
     menu.addEventListener("click", () => header.classList.toggle("open"));
     header.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => header.classList.remove("open")));
 
-    const tabs = document.querySelectorAll(".tab");
-    const panels = document.querySelectorAll(".map-panel");
-    const iframe = document.querySelector(".map-frame iframe");
-    const loadMap = () => { if (iframe && !iframe.src) iframe.src = iframe.dataset.src; };
-    tabs.forEach((tab) => tab.addEventListener("click", () => {
-      tabs.forEach((item) => item.setAttribute("aria-selected", "false"));
-      panels.forEach((panel) => panel.classList.remove("active"));
-      tab.setAttribute("aria-selected", "true");
-      document.getElementById(tab.dataset.panel).classList.add("active");
-      if (tab.dataset.panel === "layoutPanel") loadMap();
-    }));
-    const mapObserver = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) { loadMap(); mapObserver.disconnect(); }
-    }, { rootMargin: "280px" });
-    mapObserver.observe(document.getElementById("maps"));
-
+    const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbz1vZ-smxgpxMgfpESpg_ZsukNgF1pVOjOXepmei71lMIFAHTg1i0ZuWDVkbCafKHon/exec";
     const form = document.getElementById("enquiryForm");
     const message = document.getElementById("formMessage");
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const name = new FormData(form).get("name") || "there";
-      message.textContent = `Thank you, ${name}. The form interface is ready; connect the live lead endpoint before publishing.`;
+      const formData = new FormData(form);
+      const name = formData.get("name") || "there";
+      if (!LEAD_ENDPOINT) {
+        message.textContent = "Google Sheet endpoint is not added yet. Add your Apps Script Web App URL in the website code before publishing.";
+        message.classList.add("show");
+        return;
+      }
+      formData.append("source", "Anant Greens website");
+      formData.append("page", window.location.href);
+      const submitButton = form.querySelector('button[type="submit"]');
+      const originalText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+      try {
+        await fetch(LEAD_ENDPOINT, { method: "POST", mode: "no-cors", body: formData });
+        message.textContent = `Thank you, ${name}. Your enquiry has been received.`;
+        form.reset();
+      } catch (error) {
+        message.textContent = "The enquiry could not be sent. Please call us directly.";
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+      }
       message.classList.add("show");
-      form.reset();
     });
   </script>
 </body>
