@@ -343,7 +343,7 @@
           <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-sky-500"></span><span data-i18n="available">Available</span></span>
           <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-amber-400"></span><span data-i18n="inTalk">In Talk</span></span>
           <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-rose-500"></span><span data-i18n="sold">Booked</span></span>
-          <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-slate-500"></span><span data-i18n="blocked">Blocked</span></span>
+          <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full" style="background:#7c3aed"></span><span data-i18n="blocked">Blocked</span></span>
         </div>
 
         <div id="mapStage" class="map-stage relative h-[64vh] min-h-[520px] overflow-auto rounded-lg border border-slate-200 p-4 sm:h-[72vh]">
@@ -1412,7 +1412,7 @@
         case "sold":
           return "#ef4444";
         case "blocked":
-          return "#64748b";
+          return "#7c3aed";
         case "in-talk": return "#f59e0b";
         case "available": return "#FFFFFF";
         case "pending": return "#a855f7";
@@ -1427,7 +1427,7 @@
         case "sold":
           return "0.64";
         case "blocked":
-          return "0.62";
+          return "0.78";
         case "in-talk": return "0.58";
         case "available": return "0";
         default: return "0.42";
@@ -1966,7 +1966,7 @@
         case "sold":
           return "bg-rose-50 text-rose-700 ring-1 ring-rose-200";
         case "blocked":
-          return "bg-slate-100 text-slate-700 ring-1 ring-slate-300";
+          return "bg-violet-50 text-violet-800 ring-1 ring-violet-200";
         case "in-progress": return "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200";
         default: return "bg-slate-100 text-slate-700 ring-1 ring-slate-200";
       }
