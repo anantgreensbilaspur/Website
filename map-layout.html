@@ -236,14 +236,13 @@
       #languageToggle { padding-inline: 10px; }
       main { padding-top: 1rem !important; }
       .map-stage {
-        height: 76vh !important;
-        min-height: 620px !important;
-        max-height: 780px;
+        height: 60vh !important;
+        min-height: 420px !important;
+        max-height: 620px;
         padding: .75rem !important;
       }
       .map-shell { padding: .75rem !important; border-radius: 1rem !important; }
-      #mapObject { align-items: center; justify-content: center; }
-      #mapSvg { min-height: 0 !important; }
+      #mapSvg { height: min(1120px, 136vh); min-height: 760px; }
       .project-footer-row { align-items: stretch; flex-direction: column; }
       .project-footer-links { display: grid; grid-template-columns: 1fr 1fr; }
       .project-footer-links a { justify-content: center; text-align: center; }
@@ -254,10 +253,10 @@
       .site-links a { min-height: 42px; font-size: .62rem; }
       .layout-controls > div { justify-content: space-between; }
       .map-stage {
-        height: 72vh !important;
-        min-height: 600px !important;
+        height: 56vh !important;
+        min-height: 360px !important;
       }
-      #mapSvg { min-height: 0 !important; }
+      #mapSvg { height: min(980px, 126vh); min-height: 680px; }
       #interactive-layout h2 { font-size: 1.05rem; line-height: 1.2; }
       #interactive-layout p { letter-spacing: .14em; }
     }
@@ -1827,20 +1826,12 @@
       const previousZoom = state.zoom;
       const previousScrollTop = mapStage.scrollTop;
       const previousScrollLeft = mapStage.scrollLeft;
-      state.zoom = Math.max(1, Math.min(3, value));
+      state.zoom = Math.max(0.62, Math.min(3, value));
       const svg = state.mapDoc?.getElementById("mapSvg");
       if (svg) {
         const stageStyle = window.getComputedStyle(mapStage);
         const verticalPadding = parseFloat(stageStyle.paddingTop) + parseFloat(stageStyle.paddingBottom);
-        const horizontalPadding = parseFloat(stageStyle.paddingLeft) + parseFloat(stageStyle.paddingRight);
-        const availableHeight = Math.max(260, mapStage.clientHeight - verticalPadding);
-        const availableWidth = Math.max(260, mapStage.clientWidth - horizontalPadding);
-        const naturalWidth = Number(svg.getAttribute("width")) || 1500;
-        const naturalHeight = Number(svg.getAttribute("height")) || 1364;
-        const isCompact = window.matchMedia("(max-width: 680px)").matches;
-        const fittedHeight = isCompact
-          ? Math.min(availableHeight, availableWidth * (naturalHeight / naturalWidth))
-          : availableHeight;
+        const fittedHeight = Math.max(260, mapStage.clientHeight - verticalPadding);
         svg.style.height = `${fittedHeight * state.zoom}px`;
       }
 
