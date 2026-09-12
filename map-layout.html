@@ -853,7 +853,7 @@
       els.refreshBtn?.addEventListener("click", fetchRows);
       els.zoomInBtn.addEventListener("click", () => setZoom(state.zoom + 0.12));
       els.zoomOutBtn.addEventListener("click", () => setZoom(state.zoom - 0.12));
-      els.zoomResetBtn.addEventListener("click", () => setZoom(1));
+      els.zoomResetBtn.addEventListener("click", resetMapViewBox);
       els.enquiryForm.addEventListener("submit", handleEnquirySubmit);
       els.enquiryModal.addEventListener("click", event => {
         if (event.target === els.enquiryModal) closeEnquiryModal();
@@ -938,7 +938,8 @@
 
         const payload = await response.json();
         const rows = normalizeResponse(payload);
-        state.rows = rows.map((row, index) => ({ ...row, __clientRowIndex: index + 1 }));
+        const usableRows = rows.length ? rows : buildFallbackRowsFromMap();
+        state.rows = usableRows.map((row, index) => ({ ...row, __clientRowIndex: index + 1 }));
         state.columns = getColumns(state.rows);
         state.statusKey = findStatusKey(state.columns);
         populateStatusFilter();
@@ -950,13 +951,32 @@
         
         applyFilters();
       } catch (error) {
-        state.rows = [];
+        const fallbackRows = buildFallbackRowsFromMap();
+        state.rows = fallbackRows.map((row, index) => ({ ...row, __clientRowIndex: index + 1 }));
         state.filteredRows = [];
-        render();
+        state.columns = getColumns(state.rows);
+        state.statusKey = findStatusKey(state.columns);
+        populateStatusFilter();
+        applyFilters();
         showError(error.message || "Unknown loading error");
       } finally {
         setLoading(false);
       }
+    }
+
+    function buildFallbackRowsFromMap() {
+      if (!state.mapReady || !state.mapDoc) return [];
+      return getPlotShapes()
+        .map(shape => getPlotIdFromElement(shape))
+        .filter(Boolean)
+        .filter((plotId, index, plotIds) => plotIds.indexOf(plotId) === index)
+        .sort((a, b) => Number(a) - Number(b))
+        .map(plotId => ({
+          rowId: plotId,
+          "Plot No": plotId,
+          status: "Available",
+          plottype: "Residential Plot"
+        }));
     }
 
     function normalizeResponse(payload) {
@@ -1217,7 +1237,7 @@
         state.mapReady = true;
         hideMapLoader();
         renderMap();
-        requestAnimationFrame(() => setZoom(1));
+        requestAnimationFrame(() => setZoom(1, { centerLayout: true }));
       } catch (error) {
         console.warn(error);
       } finally {
@@ -1715,13 +1735,7 @@
       if (els.plotFinder) els.plotFinder.value = normalized;
       render();
       centerMapPlot(normalized);
-
-      // Show enquiry form if user is not admin and hasn't submitted enquiry this session
-      if (!state.isAdmin && !state.enquirySubmittedThisSession) {
-        openEnquiryModal(normalized);
-      } else {
-        openPlotModal(row);
-      }
+      openPlotModal(row);
     }
 
     function selectPlot(plotId) {
@@ -1775,7 +1789,7 @@
     function resetMapViewBox() {
       const svg = state.mapDoc?.getElementById("mapSvg");
       if (svg) svg.setAttribute("viewBox", "0 0 1500 1364");
-      setZoom(1);
+      setZoom(1, { centerLayout: true });
     }
 
     function handlePlotFinder(event) {
@@ -1807,7 +1821,7 @@
       render();
     }
 
-    function setZoom(value) {
+    function setZoom(value, options = {}) {
       const mapStage = document.getElementById("mapStage");
       const previousZoom = state.zoom;
       const previousScrollTop = mapStage.scrollTop;
@@ -1822,10 +1836,35 @@
       }
 
       requestAnimationFrame(() => {
+        if (options.centerLayout) {
+          centerLayoutInStage(options.behavior || "auto");
+          return;
+        }
         const ratio = state.zoom / previousZoom;
         mapStage.scrollTop = previousScrollTop * ratio;
         mapStage.scrollLeft = previousScrollLeft * ratio;
       });
+    }
+
+    function centerLayoutInStage(behavior = "auto") {
+      if (!state.mapReady || !state.mapDoc) return;
+      const svg = state.mapDoc.getElementById("mapSvg");
+      const plotLayer = state.mapDoc.getElementById("Plots-Layer");
+      const mapStage = document.getElementById("mapStage");
+      if (!svg || !plotLayer || !mapStage) return;
+      try {
+        const box = plotLayer.getBBox();
+        const scale = svg.getBoundingClientRect().height / (Number(svg.getAttribute("height")) || 1364);
+        const targetLeft = (box.x + box.width / 2) * scale - mapStage.clientWidth / 2;
+        const targetTop = (box.y + box.height / 2) * scale - mapStage.clientHeight / 2;
+        mapStage.scrollTo({
+          left: Math.max(0, targetLeft),
+          top: Math.max(0, targetTop),
+          behavior
+        });
+      } catch (error) {
+        console.warn(error);
+      }
     }
 
     function setupPinchZoom() {
