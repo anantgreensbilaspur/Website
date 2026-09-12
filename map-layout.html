@@ -312,7 +312,7 @@
         <p id="totalCount" class="mt-1 text-3xl font-black text-slate-950">0</p>
       </div>
       <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="sold">Sold</p>
+        <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="sold">Booked</p>
         <p id="soldCount" class="mt-1 text-3xl font-black text-rose-700">0</p>
       </div>
       <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -342,7 +342,8 @@
         <div class="mb-3 flex w-full items-center gap-2 overflow-x-auto whitespace-nowrap pb-1 text-xs font-bold text-slate-700">
           <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-sky-500"></span><span data-i18n="available">Available</span></span>
           <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-amber-400"></span><span data-i18n="inTalk">In Talk</span></span>
-          <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-rose-500"></span><span data-i18n="sold">Sold</span></span>
+          <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-rose-500"></span><span data-i18n="sold">Booked</span></span>
+          <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 ring-1 ring-slate-200 px-3 py-1.5"><span class="h-3 w-3 rounded-full bg-slate-500"></span><span data-i18n="blocked">Blocked</span></span>
         </div>
 
         <div id="mapStage" class="map-stage relative h-[64vh] min-h-[520px] overflow-auto rounded-lg border border-slate-200 p-4 sm:h-[72vh]">
@@ -508,7 +509,7 @@
           <p id="desktopAvailableCount" class="mt-1 text-3xl font-black text-sky-700">0</p>
         </section>
         <section class="hidden rounded-xl border border-slate-200 bg-white p-4 shadow-soft xl:block">
-          <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="sold">Sold</p>
+          <p class="text-xs font-black uppercase tracking-wide text-slate-500" data-i18n="sold">Booked</p>
           <p id="desktopSoldCount" class="mt-1 text-3xl font-black text-rose-700">0</p>
         </section>
         <section class="hidden rounded-xl border border-slate-200 bg-white p-4 shadow-soft xl:block">
@@ -602,7 +603,7 @@
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9gej3uw5uLX5fNwKd-kkLL1lR0jTANmPN2Ti774YGge4rONqX5CTiq-2smEU5fr63wg/exec";
 
-    const STATUS_OPTIONS = ["Available", "In Talk", "Sold"];
+    const STATUS_OPTIONS = ["Available", "In Talk", "Booked", "Blocked"];
     const ID_KEYS = ["rowId", "rowID", "Row ID", "RowID", "id", "ID", "Id", "plotno", "Plot No", "plotId", "Plot ID", "serial", "Serial", "S.No", "S No"];
     const STATUS_KEYS = ["status", "Status", "STATUS", "currentStatus", "Current Status"];
     const SVG_NS = "http://www.w3.org/2000/svg";
@@ -616,7 +617,8 @@
         locked: "लॉक",
         unlocked: "अनलॉक",
         totalPlots: "कुल प्लॉट",
-        sold: "बिक गया",
+        sold: "बुक्ड",
+        blocked: "ब्लॉक्ड",
         available: "उपलब्ध",
         inTalk: "बातचीत में",
         interactiveLayout: "इंटरैक्टिव लेआउट",
@@ -690,7 +692,8 @@
         locked: "Locked",
         unlocked: "Unlocked",
         totalPlots: "Total Plots",
-        sold: "Sold",
+        sold: "Booked",
+        blocked: "Blocked",
         available: "Available",
         inTalk: "In Talk",
         interactiveLayout: "Interactive Layout",
@@ -918,7 +921,11 @@
     function translateStatus(status) {
       switch (normalizeStatus(status)) {
         case "available": return t("available");
-        case "sold": return t("sold");
+        case "booked":
+        case "sold":
+          return t("sold");
+        case "blocked":
+          return t("blocked");
         case "in-talk": return t("inTalk");
         case "pending": return t("pending");
         case "in-progress": return t("inProgress");
@@ -1207,7 +1214,7 @@
 
     function renderMetrics() {
       const available = state.rows.filter(row => normalizeStatus(row[state.statusKey]) === "available").length;
-      const sold = state.rows.filter(row => normalizeStatus(row[state.statusKey]) === "sold").length;
+      const sold = state.rows.filter(row => ["booked", "sold"].includes(normalizeStatus(row[state.statusKey]))).length;
       const inTalk = state.rows.filter(row => normalizeStatus(row[state.statusKey]) === "in-talk").length;
       els.totalCount.textContent = state.rows.length;
       els.availableCount.textContent = available;
@@ -1401,7 +1408,11 @@
 
     function getMapFill(status) {
       switch (normalizeStatus(status)) {
-        case "sold": return "#ef4444";
+        case "booked":
+        case "sold":
+          return "#ef4444";
+        case "blocked":
+          return "#64748b";
         case "in-talk": return "#f59e0b";
         case "available": return "#FFFFFF";
         case "pending": return "#a855f7";
@@ -1412,7 +1423,11 @@
 
     function getMapFillOpacity(status) {
       switch (normalizeStatus(status)) {
-        case "sold": return "0.64";
+        case "booked":
+        case "sold":
+          return "0.64";
+        case "blocked":
+          return "0.62";
         case "in-talk": return "0.58";
         case "available": return "0";
         default: return "0.42";
@@ -1421,6 +1436,7 @@
 
     function getLabelColors(status) {
       switch (normalizeStatus(status)) {
+        case "booked":
         case "sold":
         case "available":
           return { fill: "#ffffff", stroke: "rgba(15, 23, 42, 0.78)" };
@@ -1428,6 +1444,7 @@
           return { fill: "#111827", stroke: "rgba(255, 255, 255, 0.86)" };
         case "pending":
         case "in-progress":
+        case "blocked":
           return { fill: "#ffffff", stroke: "rgba(15, 23, 42, 0.78)" };
         default:
           return { fill: "#ffffff", stroke: "rgba(15, 23, 42, 0.72)" };
@@ -1945,7 +1962,11 @@
       switch (normalizeStatus(status)) {
         case "available": return "bg-sky-50 text-sky-700 ring-1 ring-sky-200";
         case "in-talk": return "bg-amber-50 text-amber-800 ring-1 ring-amber-200";
-        case "sold": return "bg-rose-50 text-rose-700 ring-1 ring-rose-200";
+        case "booked":
+        case "sold":
+          return "bg-rose-50 text-rose-700 ring-1 ring-rose-200";
+        case "blocked":
+          return "bg-slate-100 text-slate-700 ring-1 ring-slate-300";
         case "in-progress": return "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200";
         default: return "bg-slate-100 text-slate-700 ring-1 ring-slate-200";
       }
