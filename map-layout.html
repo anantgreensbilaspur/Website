@@ -607,6 +607,8 @@
     const ID_KEYS = ["rowId", "rowID", "Row ID", "RowID", "id", "ID", "Id", "plotno", "Plot No", "plotId", "Plot ID", "serial", "Serial", "S.No", "S No"];
     const STATUS_KEYS = ["status", "Status", "STATUS", "currentStatus", "Current Status"];
     const SVG_NS = "http://www.w3.org/2000/svg";
+    const CACHE_KEY = "anantGreensPlotRows.v3";
+    const SHEET_TIMEOUT_MS = 22000;
     const I18N = {
       hi: {
         languageButton: "English",
@@ -853,7 +855,7 @@
       });
       els.plotFinder?.addEventListener("input", handlePlotFinder);
       els.clearBtn?.addEventListener("click", clearSelection);
-      els.refreshBtn?.addEventListener("click", fetchRows);
+      els.refreshBtn?.addEventListener("click", () => fetchRows({ force: true }));
       els.zoomInBtn.addEventListener("click", () => setZoom(state.zoom + 0.12));
       els.zoomOutBtn.addEventListener("click", () => setZoom(state.zoom - 0.12));
       els.zoomResetBtn.addEventListener("click", resetMapViewBox);
@@ -867,7 +869,9 @@
       });
       setupPinchZoom();
       initializeMap();
-      fetchRows();
+      const hasCachedRows = loadRowsFromCache();
+      if (!hasCachedRows) loadFallbackRowsFromMap();
+      fetchRows({ silent: true });
     });
 
     function t(key, params = {}) {
@@ -935,17 +939,15 @@
       }
     }
 
-    async function fetchRows() {
-      setLoading(true);
-      hideError();
+    async function fetchRows(options = {}) {
+      const { silent = false, force = false } = options;
+      if (!silent) setLoading(true);
+      if (force) hideError();
 
       try {
-        const response = await fetch(APPS_SCRIPT_URL, { method: "GET", cache: "no-store" });
-        if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
-
-        const payload = await response.json();
+        const payload = await fetchSheetPayload();
         const rows = normalizeResponse(payload);
-        const usableRows = rows.length ? rows : buildFallbackRowsFromMap();
+        const usableRows = rows.length ? rows : (state.rows.length ? state.rows : buildFallbackRowsFromMap());
         state.rows = usableRows.map((row, index) => ({ ...row, __clientRowIndex: index + 1 }));
         state.columns = getColumns(state.rows);
         state.statusKey = findStatusKey(state.columns);
@@ -957,17 +959,94 @@
         }
         
         applyFilters();
+        saveRowsToCache();
+        hideError();
       } catch (error) {
-        const fallbackRows = buildFallbackRowsFromMap();
-        state.rows = fallbackRows.map((row, index) => ({ ...row, __clientRowIndex: index + 1 }));
-        state.filteredRows = [];
+        if (!state.rows.length) {
+          const fallbackRows = buildFallbackRowsFromMap();
+          state.rows = fallbackRows.map((row, index) => ({ ...row, __clientRowIndex: index + 1 }));
+          state.filteredRows = [];
+          state.columns = getColumns(state.rows);
+          state.statusKey = findStatusKey(state.columns);
+          populateStatusFilter();
+          applyFilters();
+        }
+        if (!silent || force) showError(error.message || "Unknown loading error");
+      } finally {
+        if (!silent) setLoading(false);
+      }
+    }
+
+    async function fetchSheetPayload() {
+      const url = `${APPS_SCRIPT_URL}${APPS_SCRIPT_URL.includes("?") ? "&" : "?"}t=${Date.now()}`;
+      const response = await fetchWithTimeout(url, { method: "GET", cache: "no-store" }, SHEET_TIMEOUT_MS);
+      if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+      return response.json();
+    }
+
+    async function fetchWithTimeout(url, options = {}, timeoutMs = SHEET_TIMEOUT_MS, retries = 1) {
+      let lastError;
+      for (let attempt = 0; attempt <= retries; attempt += 1) {
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          return await fetch(url, { ...options, signal: controller.signal });
+        } catch (error) {
+          lastError = error;
+          if (attempt >= retries) break;
+          await delay(450 + attempt * 450);
+        } finally {
+          window.clearTimeout(timeoutId);
+        }
+      }
+      if (lastError?.name === "AbortError") throw new Error("Sheet request timed out");
+      throw lastError || new Error("Unable to reach sheet");
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => window.setTimeout(resolve, ms));
+    }
+
+    function loadRowsFromCache() {
+      try {
+        const cached = JSON.parse(window.localStorage.getItem(CACHE_KEY) || "null");
+        if (!cached || !Array.isArray(cached.rows) || !cached.rows.length) return false;
+        state.rows = cached.rows.map((row, index) => ({ ...row, __clientRowIndex: index + 1 }));
         state.columns = getColumns(state.rows);
-        state.statusKey = findStatusKey(state.columns);
+        state.statusKey = cached.statusKey || findStatusKey(state.columns);
+        if (cached.interestedCountMap && typeof cached.interestedCountMap === "object") {
+          state.interestedCountMap = cached.interestedCountMap;
+        }
         populateStatusFilter();
         applyFilters();
-        showError(error.message || "Unknown loading error");
-      } finally {
-        setLoading(false);
+        return true;
+      } catch (error) {
+        console.warn("Unable to load cached map rows", error);
+        return false;
+      }
+    }
+
+    function loadFallbackRowsFromMap() {
+      const fallbackRows = buildFallbackRowsFromMap();
+      if (!fallbackRows.length) return false;
+      state.rows = fallbackRows.map((row, index) => ({ ...row, __clientRowIndex: index + 1 }));
+      state.columns = getColumns(state.rows);
+      state.statusKey = findStatusKey(state.columns);
+      populateStatusFilter();
+      applyFilters();
+      return true;
+    }
+
+    function saveRowsToCache() {
+      try {
+        window.localStorage.setItem(CACHE_KEY, JSON.stringify({
+          rows: state.rows.map(({ __clientRowIndex, ...row }) => row),
+          statusKey: state.statusKey,
+          interestedCountMap: state.interestedCountMap,
+          savedAt: Date.now()
+        }));
+      } catch (error) {
+        console.warn("Unable to cache map rows", error);
       }
     }
 
@@ -1572,14 +1651,13 @@
     }
 
     async function saveInterestedCount(plotId, count) {
-      await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          type: "updateInterestedCount",
-          plotId: plotId,
-          interestedCount: count
-        })
+      await postToSheet({
+        type: "updateInterestedCount",
+        action: "updateInterestedCount",
+        plotId: plotId,
+        rowId: plotId,
+        id: plotId,
+        interestedCount: count
       });
     }
 
@@ -1632,30 +1710,40 @@
       if (newStatus === previousStatus) return;
 
       state.updatingIds.add(rowId);
+      row[state.statusKey] = newStatus;
       render();
+      saveRowsToCache();
       const pendingToast = showToast(t("updatingStatus"), "loading", false);
 
       try {
-        const response = await fetch(APPS_SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ rowId, id: rowId, status: newStatus, statusKey: state.statusKey, row })
+        const response = await postToSheet({
+          type: "updateStatus",
+          action: "updateStatus",
+          rowId,
+          id: rowId,
+          plotId: rowId,
+          plotNo: rowId,
+          status: newStatus,
+          statusKey: state.statusKey,
+          row
         });
         if (!response.ok) throw new Error(`Update failed with status ${response.status}`);
 
-        row[state.statusKey] = newStatus;
         const becameInTalk = normalizeStatus(newStatus) === "in-talk" && normalizeStatus(previousStatus) !== "in-talk";
         if (becameInTalk && (Number(state.interestedCountMap[rowId]) || 0) < 1) {
           state.interestedCountMap[rowId] = 1;
           await saveInterestedCount(rowId, 1);
         }
+        saveRowsToCache();
         dismissToast(pendingToast);
         showToast(t("statusUpdated"), "success");
         if (!els.plotModal.classList.contains("hidden")) {
           openPlotModal(row);
         }
+        window.setTimeout(() => fetchRows({ silent: true }), 900);
       } catch (error) {
         row[state.statusKey] = previousStatus;
+        saveRowsToCache();
         if (selectEl) selectEl.value = previousStatus;
         dismissToast(pendingToast);
         showToast(t("statusError"), "error");
@@ -1664,6 +1752,20 @@
         state.updatingIds.delete(rowId);
         applyFilters();
       }
+    }
+
+    async function postToSheet(payload) {
+      const params = new URLSearchParams();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value === undefined || value === null) return;
+        params.set(key, typeof value === "object" ? JSON.stringify(value) : String(value));
+      });
+      const url = `${APPS_SCRIPT_URL}${APPS_SCRIPT_URL.includes("?") ? "&" : "?"}${params.toString()}`;
+      return fetchWithTimeout(url, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      }, SHEET_TIMEOUT_MS, 1);
     }
 
     function openEnquiryModal(plotId) {
